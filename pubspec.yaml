@@ -1,0 +1,37 @@
+name: gig_backoffice
+description: "GiG Backoffice — área da equipe (E29): dashboard em abas (E1) e resposta às sugestões dos usuários."
+publish_to: 'none'
+
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter # usePathUrlStrategy (URLs sem "#")
+
+  go_router: ^14.6.3
+  mobx: ^2.5.0
+  flutter_mobx: ^2.2.1
+  get_it: ^8.0.3
+  lucide_icons: ^0.257.0
+  google_fonts: ^6.2.1 # fontes empacotadas em assets/google_fonts (sem CDN, por causa da CSP)
+  http: ^1.2.2 # BrowserClient com withCredentials (cookie da sessão)
+  fl_chart: ">=0.69.0 <2.0.0" # E1: gráficos do dashboard
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/google_fonts/
+    - assets/images/

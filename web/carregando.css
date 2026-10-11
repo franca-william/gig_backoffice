@@ -1,0 +1,10 @@
+/* Tela de carregamento (enquanto o Flutter baixa e o backoffice tenta renovar a sessão pelo cookie). */
+html, body { margin: 0; height: 100%; background: #121212; }
+#carregando { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+#carregando .pino {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 3px solid rgba(255, 183, 0, .25); border-top-color: #FFB700;
+  animation: girar .9s linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+/* O flutter-view (tela cheia) é inserido depois e cobre este carregador quando o app desenha. */

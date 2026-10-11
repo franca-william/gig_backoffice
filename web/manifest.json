@@ -1,0 +1,12 @@
+{
+  "name": "GiG Backoffice",
+  "short_name": "GiG BO",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "description": "Área da equipe GiG.",
+  "orientation": "landscape-primary",
+  "prefer_related_applications": false,
+  "icons": [{ "src": "icons/Icon-512.png", "sizes": "512x512", "type": "image/png" }]
+}

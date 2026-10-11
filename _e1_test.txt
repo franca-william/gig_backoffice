@@ -1,0 +1,66 @@
+00:00 +0: loading C:/developer/gig_backoffice/test/backoffice_api_test.dart
+00:00 +0: C:/developer/gig_backoffice/test/backoffice_api_test.dart: login guarda o access token só em memória e manda X-GiG-Backoffice
+00:00 +1: C:/developer/gig_backoffice/test/backoffice_api_test.dart: senha errada → CredenciaisInvalidasException
+00:00 +2: C:/developer/gig_backoffice/test/backoffice_api_test.dart: 401 renova pelo cookie uma vez e repete a chamada (sem Bearer na renovação)
+00:00 +3: C:/developer/gig_backoffice/test/backoffice_api_test.dart: renovação falhou → avisa que expirou e lança SessaoExpiradaException
+00:00 +4: C:/developer/gig_backoffice/test/backoffice_api_test.dart: 409 sugestao-ja-respondida vira SugestaoJaRespondidaException
+00:00 +5: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +6: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +7: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +8: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +9: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +10: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +11: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +12: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +13: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +14: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +15: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +16: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +17: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +18: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:01 +19: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:02 +20: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:02 +21: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:02 +22: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:03 +23: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:03 +24: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:03 +25: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: abre na aba Pontos de atenção e carrega só ela
+00:03 +26: C:/developer/gig_backoffice/test/dashboard_atencao_test.dart: o contador soma os itens e aparece na aba e no menu
+00:03 +27: C:/developer/gig_backoffice/test/login_test.dart: senha errada mostra a mensagem genérica e continua no login
+00:04 +28: C:/developer/gig_backoffice/test/login_test.dart: senha errada mostra a mensagem genérica e continua no login
+00:04 +29: C:/developer/gig_backoffice/test/login_test.dart: senha errada mostra a mensagem genérica e continua no login
+00:04 +30: C:/developer/gig_backoffice/test/login_test.dart: senha errada mostra a mensagem genérica e continua no login
+00:04 +31: C:/developer/gig_backoffice/test/login_test.dart: senha errada mostra a mensagem genérica e continua no login
+00:04 +32: C:/developer/gig_backoffice/test/login_test.dart: senha errada mostra a mensagem genérica e continua no login
+00:04 +33: C:/developer/gig_backoffice/test/login_test.dart: senha errada mostra a mensagem genérica e continua no login
+00:04 +34: C:/developer/gig_backoffice/test/login_test.dart: senha errada mostra a mensagem genérica e continua no login
+00:04 +35: C:/developer/gig_backoffice/test/login_test.dart: senha errada mostra a mensagem genérica e continua no login
+00:05 +36: C:/developer/gig_backoffice/test/sugestao_detalhe_test.dart: marcar em análise (recebida)
+00:05 +37: C:/developer/gig_backoffice/test/sugestao_detalhe_test.dart: marcar em análise (recebida)
+00:05 +38: C:/developer/gig_backoffice/test/sugestao_detalhe_test.dart: marcar em análise (recebida)
+00:05 +39: C:/developer/gig_backoffice/test/sugestao_detalhe_test.dart: marcar em análise (recebida)
+00:05 +40: C:/developer/gig_backoffice/test/sugestao_detalhe_test.dart: marcar em análise (recebida)
+00:05 +41: C:/developer/gig_backoffice/test/sugestao_detalhe_test.dart: marcar em análise (recebida)
+00:06 +42: C:/developer/gig_backoffice/test/sugestao_detalhe_test.dart: marcar em análise (recebida)
+00:06 +43: C:/developer/gig_backoffice/test/sugestoes_lista_test.dart: padrão "Sem resposta": mais antigas primeiro, etiquetas de atraso e contador no menu
+00:06 +44: C:/developer/gig_backoffice/test/sugestoes_lista_test.dart: padrão "Sem resposta": mais antigas primeiro, etiquetas de atraso e contador no menu
+00:06 +45: C:/developer/gig_backoffice/test/sugestoes_lista_test.dart: padrão "Sem resposta": mais antigas primeiro, etiquetas de atraso e contador no menu
+00:07 +46: C:/developer/gig_backoffice/test/sugestoes_lista_test.dart: padrão "Sem resposta": mais antigas primeiro, etiquetas de atraso e contador no menu
+00:07 +47: C:/developer/gig_backoffice/test/sugestoes_lista_test.dart: padrão "Sem resposta": mais antigas primeiro, etiquetas de atraso e contador no menu
+00:07 +48: C:/developer/gig_backoffice/test/sugestoes_lista_test.dart: padrão "Sem resposta": mais antigas primeiro, etiquetas de atraso e contador no menu
+00:07 +49: C:/developer/gig_backoffice/test/sugestoes_lista_test.dart: padrão "Sem resposta": mais antigas primeiro, etiquetas de atraso e contador no menu
+00:07 +50: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: todas as abas abrem sem erro de layout (1400 px)
+00:08 +51: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: todas as abas abrem sem erro de layout (1400 px)
+00:08 +52: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: todas as abas abrem sem erro de layout (1400 px)
+00:08 +53: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: todas as abas abrem sem erro de layout (1400 px)
+00:08 +54: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: todas as abas abrem sem erro de layout (1400 px)
+00:08 +55: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: todas as abas abrem sem erro de layout (1400 px)
+00:08 +56: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: todas as abas abrem sem erro de layout (1400 px)
+00:08 +57: C:/developer/gig_backoffice/test/sugestoes_lista_test.dart: filtro de perfil e busca no texto
+00:09 +58: C:/developer/gig_backoffice/test/sugestoes_lista_test.dart: filtro de perfil e busca no texto
+00:09 +59: C:/developer/gig_backoffice/test/sugestoes_lista_test.dart: filtro de perfil e busca no texto
+00:09 +60: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: todas as abas abrem sem erro de layout (800 px)
+00:09 +61: C:/developer/gig_backoffice/test/dashboard_abas_test.dart: todas as abas abrem sem erro de layout (800 px)
+00:09 +62: C:/developer/gig_backoffice/test/sugestoes_lista_test.dart: sem nada pendente: "Tudo respondido!"
+00:09 +63: C:/developer/gig_backoffice/test/sugestoes_lista_test.dart: clicar na linha abre o detalhe
+00:10 +64: All tests passed!
