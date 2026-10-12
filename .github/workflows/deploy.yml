@@ -27,7 +27,7 @@ jobs:
       - uses: docker/login-action@v3
         with: { username: "${{ secrets.DOCKERHUB_USERNAME }}", password: "${{ secrets.DOCKERHUB_TOKEN }}" }
 
-      - name: Build e push (multi-arch: a VM da Oracle é arm64)
+      - name: Build e push (multi-arch, a VM da Oracle é arm64)
         uses: docker/build-push-action@v6
         with:
           context: .
