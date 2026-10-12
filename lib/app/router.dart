@@ -8,6 +8,8 @@ import '../features/dashboard/dashboard_page.dart';
 import '../features/shell/layout_backoffice.dart';
 import '../features/sugestoes/sugestao_detalhe_page.dart';
 import '../features/sugestoes/sugestoes_page.dart';
+import '../features/verificacoes/verificacao_detalhe_page.dart';
+import '../features/verificacoes/verificacoes_page.dart';
 import 'rotas.dart';
 import 'sessao_store.dart';
 
@@ -61,6 +63,17 @@ GoRouter criarRouter(SessaoStore sessao,
                 path: ':id',
                 pageBuilder: (c, s) => NoTransitionPage(
                     child: SugestaoDetalhePage(id: s.pathParameters['id']!)),
+              ),
+            ],
+          ),
+          // E30 — verificações dos estabelecimentos
+          GoRoute(
+            path: Rotas.verificacoes,
+            pageBuilder: (c, s) => const NoTransitionPage(child: VerificacoesPage()),
+            routes: [
+              GoRoute(
+                path: ':id',
+                pageBuilder: (c, s) => NoTransitionPage(child: VerificacaoDetalhePage(id: s.pathParameters['id']!)),
               ),
             ],
           ),

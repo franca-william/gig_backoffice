@@ -10,6 +10,7 @@ import '../../core/theme/theme.dart';
 import '../../core/widgets/gig_logo.dart';
 import '../dashboard/dashboard_store.dart';
 import '../sugestoes/sugestoes_store.dart';
+import '../verificacoes/verificacoes_store.dart';
 
 /// Menu lateral fixo (240 px) a partir de 1024 px de largura; abaixo disso vira gaveta.
 /// Conteúdo com largura máxima de 1200 px.
@@ -32,6 +33,7 @@ class _LayoutBackofficeState extends State<LayoutBackoffice> {
   void initState() {
     super.initState();
     getIt<SugestoesStore>().atualizarContagem();
+    getIt<VerificacoesStore>().atualizarContagem();
     // Depois do quadro: o store é observado pelo menu e pelo dashboard que estão sendo montados agora.
     WidgetsBinding.instance.addPostFrameCallback((_) => getIt<DashboardStore>().atualizarContador());
   }
@@ -83,6 +85,7 @@ class MenuLateral extends StatelessWidget {
     final sessao = getIt<SessaoStore>();
     final sugestoes = getIt<SugestoesStore>();
     final dashboard = getIt<DashboardStore>();
+    final verificacoes = getIt<VerificacoesStore>();
     void ir(String rota) {
       aoNavegar?.call();
       context.go(rota);
@@ -127,6 +130,16 @@ class MenuLateral extends StatelessWidget {
                 aoTocar: () => ir(Rotas.sugestoes),
               );
             }),
+            Observer(builder: (_) {
+              final n = verificacoes.contagem.value.emAnalise;
+              return _ItemMenu(
+                key: const Key('menu-verificacoes'),
+                icone: LucideIcons.shieldCheck,
+                rotulo: n > 0 ? 'Verificações ($n)' : 'Verificações',
+                ativo: local.startsWith(Rotas.verificacoes),
+                aoTocar: () => ir(Rotas.verificacoes),
+              );
+            }),
             const Spacer(),
             const Divider(),
             Padding(
@@ -143,6 +156,7 @@ class MenuLateral extends StatelessWidget {
                       aoNavegar?.call();
                       await sessao.sair();
                       sugestoes.limpar();
+                      verificacoes.limpar();
                       dashboard.limpar();
                     },
                     icon: const Icon(LucideIcons.logOut, size: 16),

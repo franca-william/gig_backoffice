@@ -22,6 +22,7 @@ dependencies:
   lucide_icons: ^0.257.0
   google_fonts: ^6.2.1 # fontes empacotadas em assets/google_fonts (sem CDN, por causa da CSP)
   http: ^1.2.2 # BrowserClient com withCredentials (cookie da sessão)
+  web: ">=0.5.0 <2.0.0" # E30: abrir o PDF da verificação numa aba nova (já vem com o http)
   fl_chart: ">=0.69.0 <2.0.0" # E1: gráficos do dashboard
 
 dev_dependencies:

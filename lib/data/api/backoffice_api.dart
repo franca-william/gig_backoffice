@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
@@ -97,7 +98,22 @@ class BackofficeApi {
         body: corpo == null ? null : jsonEncode(corpo),
       ));
 
-  Future<Map<String, dynamic>> _autenticada(Future<http.Response> Function() chamar) async {
+  /// E30 — conteúdo binário (arquivo da verificação), com a mesma renovação de sessão das outras chamadas.
+  Future<({Uint8List bytes, String contentType})> bytes(String caminho) async {
+    final resposta = await _autenticadaBruta(() => _cliente.get(_uri(caminho), headers: {
+          ..._cabecalhos(),
+          'Accept': '*/*',
+        }));
+    if (resposta.statusCode < 200 || resposta.statusCode >= 300) {
+      _json(resposta); // lança o erro com a mensagem do backend
+    }
+    return (bytes: resposta.bodyBytes, contentType: resposta.headers['content-type'] ?? 'application/octet-stream');
+  }
+
+  Future<Map<String, dynamic>> _autenticada(Future<http.Response> Function() chamar) async =>
+      _json(await _autenticadaBruta(chamar));
+
+  Future<http.Response> _autenticadaBruta(Future<http.Response> Function() chamar) async {
     if (_accessToken == null && await renovar() == null) {
       _expirou();
     }
@@ -112,7 +128,7 @@ class BackofficeApi {
       _accessToken = null;
       _expirou();
     }
-    return _json(resposta);
+    return resposta;
   }
 
   Never _expirou() {
@@ -130,6 +146,9 @@ class BackofficeApi {
     final problema = corpo is Map<String, dynamic> ? corpo : const <String, dynamic>{};
     if (resposta.statusCode == 409 && problema['codigo'] == 'sugestao-ja-respondida') {
       throw const SugestaoJaRespondidaException();
+    }
+    if (resposta.statusCode == 409 && problema['codigo'] == 'verificacao-ja-analisada') {
+      throw const VerificacaoJaAnalisadaException();
     }
     throw BackofficeException(problema['detail'] as String? ?? 'Não foi possível completar (erro ${resposta.statusCode}).');
   }
