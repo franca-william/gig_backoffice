@@ -1,0 +1,38 @@
+name: Publicar imagem
+
+# A cada push na main: build web (Flutter) -> imagem no Docker Hub (:latest). A VPS detecta a imagem nova sozinha.
+on:
+  push:
+    branches: [main]
+
+permissions: { contents: read }
+concurrency: { group: publicar-imagem, cancel-in-progress: false }
+
+jobs:
+  imagem:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+
+      - run: flutter pub get
+
+      # --no-web-resources-cdn: CanvasKit vai junto (a CSP só libera 'self').
+      # GIG_MODO=api: usa a API no mesmo endereço (/api/...).
+      - run: flutter build web --release --no-web-resources-cdn --dart-define=GIG_MODO=api
+
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with: { username: "${{ secrets.DOCKERHUB_USERNAME }}", password: "${{ secrets.DOCKERHUB_TOKEN }}" }
+
+      - name: Build e push (multi-arch: a VM da Oracle é arm64)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/gig-backoffice:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/gig-backoffice:sha-${{ github.sha }}
