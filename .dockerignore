@@ -1,0 +1,3 @@
+*
+!build/web
+!deploy/nginx/default.conf

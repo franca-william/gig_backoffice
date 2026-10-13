@@ -10,5 +10,6 @@ abstract final class Rotas {
 
   /// `/dashboard?aba=marketplace&periodo=30` (E1: a aba e o período ficam na URL).
   static String dashboardCom({required String aba, required int periodo}) =>
-      Uri(path: dashboard, queryParameters: {'aba': aba, 'periodo': '$periodo'}).toString();
+      Uri(path: dashboard, queryParameters: {'aba': aba, 'periodo': '$periodo'})
+          .toString();
 }

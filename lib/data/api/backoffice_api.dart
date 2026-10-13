@@ -36,21 +36,26 @@ class BackofficeApi {
 
   Uri _uri(String caminho, [Map<String, String>? query]) {
     final uri = Uri.parse('$_base$caminho');
-    return query == null || query.isEmpty ? uri : uri.replace(queryParameters: query);
+    return query == null || query.isEmpty
+        ? uri
+        : uri.replace(queryParameters: query);
   }
 
-  Map<String, String> _cabecalhos({bool comToken = true, bool json = false}) => {
+  Map<String, String> _cabecalhos({bool comToken = true, bool json = false}) =>
+      {
         'Accept': 'application/json',
         cabecalhoBackoffice: '1',
         if (json) 'Content-Type': 'application/json',
-        if (comToken && _accessToken != null) 'Authorization': 'Bearer $_accessToken',
+        if (comToken && _accessToken != null)
+          'Authorization': 'Bearer $_accessToken',
       };
 
   // ---------- sessão ----------
 
   Future<Map<String, dynamic>> entrar(String login, String senha) async {
     final resposta = await _cliente.post(_uri(caminhoSessao),
-        headers: _cabecalhos(comToken: false, json: true), body: jsonEncode({'login': login, 'senha': senha}));
+        headers: _cabecalhos(comToken: false, json: true),
+        body: jsonEncode({'login': login, 'senha': senha}));
     if (resposta.statusCode == 401) throw const CredenciaisInvalidasException();
     final corpo = _json(resposta);
     _accessToken = corpo['accessToken'] as String?;
@@ -60,12 +65,14 @@ class BackofficeApi {
   /// Renova pelo cookie. Nulo = sem sessão (sem cookie, vencido ou acesso desligado).
   /// Chamadas simultâneas compartilham a mesma renovação (o refresh gira e não pode ser usado duas vezes).
   Future<Map<String, dynamic>?> renovar() {
-    return _renovacaoEmAndamento ??= _renovar().whenComplete(() => _renovacaoEmAndamento = null);
+    return _renovacaoEmAndamento ??=
+        _renovar().whenComplete(() => _renovacaoEmAndamento = null);
   }
 
   Future<Map<String, dynamic>?> _renovar() async {
     try {
-      final resposta = await _cliente.post(_uri('$caminhoSessao/renovacao'), headers: _cabecalhos(comToken: false));
+      final resposta = await _cliente.post(_uri('$caminhoSessao/renovacao'),
+          headers: _cabecalhos(comToken: false));
       if (resposta.statusCode != 200) {
         _accessToken = null;
         return null;
@@ -81,7 +88,8 @@ class BackofficeApi {
 
   Future<void> sair() async {
     try {
-      await _cliente.delete(_uri(caminhoSessao), headers: _cabecalhos(comToken: false));
+      await _cliente.delete(_uri(caminhoSessao),
+          headers: _cabecalhos(comToken: false));
     } finally {
       _accessToken = null;
     }
@@ -89,31 +97,41 @@ class BackofficeApi {
 
   // ---------- chamadas autenticadas ----------
 
-  Future<Map<String, dynamic>> get(String caminho, {Map<String, String>? query}) =>
-      _autenticada(() => _cliente.get(_uri(caminho, query), headers: _cabecalhos()));
+  Future<Map<String, dynamic>> get(String caminho,
+          {Map<String, String>? query}) =>
+      _autenticada(
+          () => _cliente.get(_uri(caminho, query), headers: _cabecalhos()));
 
-  Future<Map<String, dynamic>> post(String caminho, {Object? corpo}) => _autenticada(() => _cliente.post(
-        _uri(caminho),
-        headers: _cabecalhos(json: corpo != null),
-        body: corpo == null ? null : jsonEncode(corpo),
-      ));
+  Future<Map<String, dynamic>> post(String caminho, {Object? corpo}) =>
+      _autenticada(() => _cliente.post(
+            _uri(caminho),
+            headers: _cabecalhos(json: corpo != null),
+            body: corpo == null ? null : jsonEncode(corpo),
+          ));
 
   /// E30 — conteúdo binário (arquivo da verificação), com a mesma renovação de sessão das outras chamadas.
   Future<({Uint8List bytes, String contentType})> bytes(String caminho) async {
-    final resposta = await _autenticadaBruta(() => _cliente.get(_uri(caminho), headers: {
-          ..._cabecalhos(),
-          'Accept': '*/*',
-        }));
+    final resposta =
+        await _autenticadaBruta(() => _cliente.get(_uri(caminho), headers: {
+              ..._cabecalhos(),
+              'Accept': '*/*',
+            }));
     if (resposta.statusCode < 200 || resposta.statusCode >= 300) {
       _json(resposta); // lança o erro com a mensagem do backend
     }
-    return (bytes: resposta.bodyBytes, contentType: resposta.headers['content-type'] ?? 'application/octet-stream');
+    return (
+      bytes: resposta.bodyBytes,
+      contentType:
+          resposta.headers['content-type'] ?? 'application/octet-stream'
+    );
   }
 
-  Future<Map<String, dynamic>> _autenticada(Future<http.Response> Function() chamar) async =>
+  Future<Map<String, dynamic>> _autenticada(
+          Future<http.Response> Function() chamar) async =>
       _json(await _autenticadaBruta(chamar));
 
-  Future<http.Response> _autenticadaBruta(Future<http.Response> Function() chamar) async {
+  Future<http.Response> _autenticadaBruta(
+      Future<http.Response> Function() chamar) async {
     if (_accessToken == null && await renovar() == null) {
       _expirou();
     }
@@ -143,13 +161,17 @@ class BackofficeApi {
     if (resposta.statusCode >= 200 && resposta.statusCode < 300) {
       return corpo is Map<String, dynamic> ? corpo : <String, dynamic>{};
     }
-    final problema = corpo is Map<String, dynamic> ? corpo : const <String, dynamic>{};
-    if (resposta.statusCode == 409 && problema['codigo'] == 'sugestao-ja-respondida') {
+    final problema =
+        corpo is Map<String, dynamic> ? corpo : const <String, dynamic>{};
+    if (resposta.statusCode == 409 &&
+        problema['codigo'] == 'sugestao-ja-respondida') {
       throw const SugestaoJaRespondidaException();
     }
-    if (resposta.statusCode == 409 && problema['codigo'] == 'verificacao-ja-analisada') {
+    if (resposta.statusCode == 409 &&
+        problema['codigo'] == 'verificacao-ja-analisada') {
       throw const VerificacaoJaAnalisadaException();
     }
-    throw BackofficeException(problema['detail'] as String? ?? 'Não foi possível completar (erro ${resposta.statusCode}).');
+    throw BackofficeException(problema['detail'] as String? ??
+        'Não foi possível completar (erro ${resposta.statusCode}).');
   }
 }

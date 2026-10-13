@@ -20,14 +20,16 @@ class SessaoExpiradaException implements Exception {
 class SugestaoJaRespondidaException implements Exception {
   const SugestaoJaRespondidaException();
   @override
-  String toString() => 'Outra pessoa da equipe acabou de responder esta sugestão.';
+  String toString() =>
+      'Outra pessoa da equipe acabou de responder esta sugestão.';
 }
 
 /// E30 — outra pessoa da equipe já deu a devolutiva desta verificação (409).
 class VerificacaoJaAnalisadaException implements Exception {
   const VerificacaoJaAnalisadaException();
   @override
-  String toString() => 'Outra pessoa da equipe acabou de dar a devolutiva desta verificação.';
+  String toString() =>
+      'Outra pessoa da equipe acabou de dar a devolutiva desta verificação.';
 }
 
 class BackofficeException implements Exception {
@@ -61,19 +63,23 @@ abstract interface class SugestaoRepository {
 
 /// E30 — verificação dos estabelecimentos. Toda devolutiva (aprovar, pedir ajuste, recusar) notifica a casa no app.
 abstract interface class VerificacaoRepository {
-  Future<PaginaVerificacoes> listar(FiltroVerificacoes filtro, {int pagina = 0});
+  Future<PaginaVerificacoes> listar(FiltroVerificacoes filtro,
+      {int pagina = 0});
   Future<ContagemVerificacoes> contagem();
   Future<VerificacaoDetalhe> detalhe(String id);
 
   /// Conteúdo do arquivo (imagem ou PDF), baixado com o token: o arquivo nunca tem URL. Cada abertura é auditada.
-  Future<({Uint8List bytes, String contentType})> arquivo(String id, String arquivoId);
+  Future<({Uint8List bytes, String contentType})> arquivo(
+      String id, String arquivoId);
 
   /// Lança [VerificacaoJaAnalisadaException] (409) se outra pessoa decidiu antes.
   Future<VerificacaoDetalhe> aprovar(String id, {String? observacaoInterna});
 
   /// Pedido com documentos: [recusas] (pelo menos uma). Sem CNPJ: [mensagem] obrigatória.
   Future<VerificacaoDetalhe> reprovar(String id,
-      {List<RecusaDeArquivo> recusas = const [], String? mensagem, String? observacaoInterna});
+      {List<RecusaDeArquivo> recusas = const [],
+      String? mensagem,
+      String? observacaoInterna});
 }
 
 /// E1 — dashboard em abas. Uma chamada por aba; [atualizar] ignora o cache de 5 min do backend.

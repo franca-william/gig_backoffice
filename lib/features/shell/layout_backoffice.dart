@@ -35,24 +35,29 @@ class _LayoutBackofficeState extends State<LayoutBackoffice> {
     getIt<SugestoesStore>().atualizarContagem();
     getIt<VerificacoesStore>().atualizarContagem();
     // Depois do quadro: o store é observado pelo menu e pelo dashboard que estão sendo montados agora.
-    WidgetsBinding.instance.addPostFrameCallback((_) => getIt<DashboardStore>().atualizarContador());
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => getIt<DashboardStore>().atualizarContador());
   }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      final fixo = constraints.maxWidth >= LayoutBackoffice.larguraMinimaMenuFixo;
+      final fixo =
+          constraints.maxWidth >= LayoutBackoffice.larguraMinimaMenuFixo;
       final conteudo = Align(
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: LayoutBackoffice.larguraMaximaConteudo),
+          constraints: const BoxConstraints(
+              maxWidth: LayoutBackoffice.larguraMaximaConteudo),
           child: widget.child,
         ),
       );
       if (fixo) {
         return Scaffold(
           body: Row(children: [
-            SizedBox(width: LayoutBackoffice.larguraMenu, child: MenuLateral(local: widget.local)),
+            SizedBox(
+                width: LayoutBackoffice.larguraMenu,
+                child: MenuLateral(local: widget.local)),
             const VerticalDivider(width: 1),
             Expanded(child: conteudo),
           ]),
@@ -66,7 +71,9 @@ class _LayoutBackofficeState extends State<LayoutBackoffice> {
         drawer: Drawer(
           width: LayoutBackoffice.larguraMenu,
           backgroundColor: GigColors.surface,
-          child: MenuLateral(local: widget.local, aoNavegar: () => Navigator.of(context).maybePop()),
+          child: MenuLateral(
+              local: widget.local,
+              aoNavegar: () => Navigator.of(context).maybePop()),
         ),
         body: conteudo,
       );
@@ -98,13 +105,15 @@ class MenuLateral extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(GigSpacing.xl, GigSpacing.xxl, GigSpacing.xl, GigSpacing.xxl),
+              padding: const EdgeInsets.fromLTRB(
+                  GigSpacing.xl, GigSpacing.xxl, GigSpacing.xl, GigSpacing.xxl),
               child: Row(children: [
                 const GigLogo(largura: 64),
                 const SizedBox(width: GigSpacing.sm),
                 Flexible(
                   child: Text('Backoffice',
-                      style: GigTypography.h3.copyWith(color: GigColors.textSubtle),
+                      style: GigTypography.h3
+                          .copyWith(color: GigColors.textSubtle),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
                 ),
@@ -146,23 +155,29 @@ class MenuLateral extends StatelessWidget {
               padding: const EdgeInsets.all(GigSpacing.lg),
               child: Observer(builder: (_) {
                 final membro = sessao.membro.value;
-                return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(membro?.nome ?? '', style: GigTypography.h3, overflow: TextOverflow.ellipsis),
-                  Text(membro?.login ?? '', style: GigTypography.small, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: GigSpacing.md),
-                  OutlinedButton.icon(
-                    key: const Key('menu-sair'),
-                    onPressed: () async {
-                      aoNavegar?.call();
-                      await sessao.sair();
-                      sugestoes.limpar();
-                      verificacoes.limpar();
-                      dashboard.limpar();
-                    },
-                    icon: const Icon(LucideIcons.logOut, size: 16),
-                    label: const Text('Sair'),
-                  ),
-                ]);
+                return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(membro?.nome ?? '',
+                          style: GigTypography.h3,
+                          overflow: TextOverflow.ellipsis),
+                      Text(membro?.login ?? '',
+                          style: GigTypography.small,
+                          overflow: TextOverflow.ellipsis),
+                      const SizedBox(height: GigSpacing.md),
+                      OutlinedButton.icon(
+                        key: const Key('menu-sair'),
+                        onPressed: () async {
+                          aoNavegar?.call();
+                          await sessao.sair();
+                          sugestoes.limpar();
+                          verificacoes.limpar();
+                          dashboard.limpar();
+                        },
+                        icon: const Icon(LucideIcons.logOut, size: 16),
+                        label: const Text('Sair'),
+                      ),
+                    ]);
               }),
             ),
           ],
@@ -173,7 +188,12 @@ class MenuLateral extends StatelessWidget {
 }
 
 class _ItemMenu extends StatelessWidget {
-  const _ItemMenu({super.key, required this.icone, required this.rotulo, required this.ativo, required this.aoTocar});
+  const _ItemMenu(
+      {super.key,
+      required this.icone,
+      required this.rotulo,
+      required this.ativo,
+      required this.aoTocar});
 
   final IconData icone;
   final String rotulo;
@@ -184,7 +204,8 @@ class _ItemMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final cor = ativo ? GigColors.primary : GigColors.textSubtle;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: GigSpacing.md, vertical: GigSpacing.xxs),
+      padding: const EdgeInsets.symmetric(
+          horizontal: GigSpacing.md, vertical: GigSpacing.xxs),
       child: Material(
         color: ativo ? GigColors.primarySoft : Colors.transparent,
         borderRadius: GigRadius.button,
@@ -192,11 +213,14 @@ class _ItemMenu extends StatelessWidget {
           borderRadius: GigRadius.button,
           onTap: aoTocar,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: GigSpacing.md, vertical: GigSpacing.md),
+            padding: const EdgeInsets.symmetric(
+                horizontal: GigSpacing.md, vertical: GigSpacing.md),
             child: Row(children: [
               Icon(icone, size: 18, color: cor),
               const SizedBox(width: GigSpacing.md),
-              Expanded(child: Text(rotulo, style: GigTypography.buttonMedium.copyWith(color: cor))),
+              Expanded(
+                  child: Text(rotulo,
+                      style: GigTypography.buttonMedium.copyWith(color: cor))),
             ]),
           ),
         ),

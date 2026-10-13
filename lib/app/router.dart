@@ -51,7 +51,8 @@ GoRouter criarRouter(SessaoStore sessao,
               pageBuilder: (c, s) => NoTransitionPage(
                     child: DashboardPage(
                       aba: AbaDashboard.deUrl(s.uri.queryParameters['aba']),
-                      periodo: PeriodoDashboard.deUrl(s.uri.queryParameters['periodo']),
+                      periodo: PeriodoDashboard.deUrl(
+                          s.uri.queryParameters['periodo']),
                     ),
                   )),
           GoRoute(
@@ -69,11 +70,13 @@ GoRouter criarRouter(SessaoStore sessao,
           // E30 — verificações dos estabelecimentos
           GoRoute(
             path: Rotas.verificacoes,
-            pageBuilder: (c, s) => const NoTransitionPage(child: VerificacoesPage()),
+            pageBuilder: (c, s) =>
+                const NoTransitionPage(child: VerificacoesPage()),
             routes: [
               GoRoute(
                 path: ':id',
-                pageBuilder: (c, s) => NoTransitionPage(child: VerificacaoDetalhePage(id: s.pathParameters['id']!)),
+                pageBuilder: (c, s) => NoTransitionPage(
+                    child: VerificacaoDetalhePage(id: s.pathParameters['id']!)),
               ),
             ],
           ),

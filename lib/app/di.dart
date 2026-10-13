@@ -16,7 +16,8 @@ final getIt = GetIt.instance;
 
 /// Com `--dart-define=GIG_API=...` (dev) ou no build de produção (`--dart-define=GIG_MODO=api`) usa a API;
 /// sem nenhum dos dois, os mocks (login `equipe@gig.app` / `123456`).
-const bool usarApi = gigApiBase != '' || String.fromEnvironment('GIG_MODO') == 'api';
+const bool usarApi =
+    gigApiBase != '' || String.fromEnvironment('GIG_MODO') == 'api';
 
 void configurarDependencias(
     {SessaoRepository? sessao,
@@ -28,12 +29,19 @@ void configurarDependencias(
   final agora = relogio ?? DateTime.now;
   getIt.registerSingleton<Relogio>(agora);
 
-  if (sessao != null || sugestoes != null || dashboard != null || verificacoes != null || !usarApi) {
+  if (sessao != null ||
+      sugestoes != null ||
+      dashboard != null ||
+      verificacoes != null ||
+      !usarApi) {
     getIt
       ..registerSingleton<SessaoRepository>(sessao ?? MockSessaoRepository())
-      ..registerSingleton<SugestaoRepository>(sugestoes ?? MockSugestaoRepository(relogio: agora))
-      ..registerSingleton<DashboardRepository>(dashboard ?? MockDashboardRepository(relogio: agora))
-      ..registerSingleton<VerificacaoRepository>(verificacoes ?? MockVerificacaoRepository(relogio: agora));
+      ..registerSingleton<SugestaoRepository>(
+          sugestoes ?? MockSugestaoRepository(relogio: agora))
+      ..registerSingleton<DashboardRepository>(
+          dashboard ?? MockDashboardRepository(relogio: agora))
+      ..registerSingleton<VerificacaoRepository>(
+          verificacoes ?? MockVerificacaoRepository(relogio: agora));
   } else {
     final api = BackofficeApi();
     getIt
