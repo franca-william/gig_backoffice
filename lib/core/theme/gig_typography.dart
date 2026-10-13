@@ -7,6 +7,9 @@ import 'gig_colors.dart';
 ///
 /// Letter-spacing em Flutter é absoluto (px): 0.1em em 12px = 1.2.
 abstract final class GigTypography {
+  /// Reserva para símbolos e emojis, empacotada no app (a CSP não deixa o Flutter baixar do Google Fonts).
+  static const _reserva = ['NotoSansSymbols', 'NotoEmoji'];
+
   static TextStyle _slab(double size, FontWeight weight, {double? height, double? spacing, Color? color}) =>
       GoogleFonts.robotoSlab(
         fontSize: size,
@@ -14,7 +17,7 @@ abstract final class GigTypography {
         height: height,
         letterSpacing: spacing,
         color: color ?? GigColors.text,
-      );
+      ).copyWith(fontFamilyFallback: _reserva);
 
   static TextStyle _flex(double size, FontWeight weight, {double? height, double? spacing, Color? color}) =>
       GoogleFonts.robotoFlex(
@@ -23,7 +26,7 @@ abstract final class GigTypography {
         height: height,
         letterSpacing: spacing,
         color: color ?? GigColors.text,
-      );
+      ).copyWith(fontFamilyFallback: _reserva);
 
   // Títulos
   static TextStyle get display => _slab(30, FontWeight.w700, height: 1.25);

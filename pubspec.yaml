@@ -36,3 +36,13 @@ flutter:
   assets:
     - assets/google_fonts/
     - assets/images/
+
+  # Fontes de reserva para símbolos (→, ✓) e emojis (✅, 🎉). Sem elas o Flutter Web tenta baixar do
+  # fonts.gstatic.com, que a CSP bloqueia (flood de erros no console).
+  fonts:
+    - family: NotoSansSymbols
+      fonts:
+        - asset: assets/google_fonts/NotoSansSymbols.ttf
+    - family: NotoEmoji
+      fonts:
+        - asset: assets/google_fonts/NotoEmoji.ttf
