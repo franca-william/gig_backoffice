@@ -80,7 +80,7 @@ void main() {
     await tester.tap(find.byKey(const Key('menu-sugestoes')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Tudo respondido! 🎉'), findsOneWidget);
+    expect(find.text('Tudo respondido!'), findsOneWidget);
     expect(find.text('Sugestões'), findsWidgets);
   });
 

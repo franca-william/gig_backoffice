@@ -165,7 +165,7 @@ class _VerificacoesPageState extends State<VerificacoesPage> {
         final f = _store.filtro.value;
         final fila = f.situacao == FiltroVerificacao.emAnalise && f.tipo == null && f.busca.isEmpty;
         return Center(
-          child: Text(fila ? 'Nenhuma verificação esperando. 🎉' : 'Nenhuma verificação com esses filtros.',
+          child: Text(fila ? 'Nenhuma verificação esperando.' : 'Nenhuma verificação com esses filtros.',
               style: GigTypography.h2),
         );
       }

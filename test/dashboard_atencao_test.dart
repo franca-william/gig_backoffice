@@ -64,10 +64,10 @@ void main() {
     expect(find.text('Ver na lista'), findsOneWidget);
   });
 
-  testWidgets('sem nada pendente: "Nada pedindo atenção agora ✅" e menu sem número', (tester) async {
+  testWidgets('sem nada pendente: "Nada pedindo atenção agora" e menu sem número', (tester) async {
     await montarApp(tester, logado: true, dashboard: MockDashboardRepository(relogio: () => agoraFixo, semPendencias: true));
 
-    expect(find.text('Nada pedindo atenção agora ✅'), findsOneWidget);
+    expect(find.text('Nada pedindo atenção agora'), findsOneWidget);
     expect(find.text('Pontos de atenção'), findsOneWidget);
     expect(find.text('Dashboard'), findsOneWidget);
   });

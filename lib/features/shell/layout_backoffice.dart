@@ -101,7 +101,13 @@ class MenuLateral extends StatelessWidget {
     return ColoredBox(
       color: GigColors.surface,
       child: SafeArea(
-        child: Column(
+        // Rolável: em janela baixa (ex.: DevTools aberto) os últimos itens não podem ficar cortados.
+        child: LayoutBuilder(
+          builder: (context, restricoes) => SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: restricoes.maxHeight),
+              child: IntrinsicHeight(
+                child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
@@ -181,6 +187,10 @@ class MenuLateral extends StatelessWidget {
               }),
             ),
           ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

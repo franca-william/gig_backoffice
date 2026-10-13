@@ -35,7 +35,7 @@ class AtencaoAba extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = dados.cartoes;
     if (dados.vazia) {
-      return const VazioDaAba(texto: 'Nada pedindo atenção agora ✅', icone: LucideIcons.checkCircle);
+      return const VazioDaAba(texto: 'Nada pedindo atenção agora', icone: LucideIcons.checkCircle);
     }
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       GradeDeCartoes(cartoes: [

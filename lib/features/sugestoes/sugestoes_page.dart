@@ -157,7 +157,7 @@ class _SugestoesPageState extends State<SugestoesPage> {
             _store.filtro.value.perfil == null && _store.filtro.value.tipo == null && _store.filtro.value.busca.isEmpty;
         return Center(
           child: Text(
-            semResposta && semOutrosFiltros ? 'Tudo respondido! 🎉' : 'Nenhuma sugestão com esses filtros.',
+            semResposta && semOutrosFiltros ? 'Tudo respondido!' : 'Nenhuma sugestão com esses filtros.',
             style: GigTypography.h2,
           ),
         );
