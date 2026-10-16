@@ -282,7 +282,7 @@ class _Linha extends StatelessWidget {
           SizedBox(
             width: _wPrazo,
             child: Wrap(spacing: 6, runSpacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
-              if (d.situacao.aberta) Text(Formatar.dataHora(d.prazoAnalise), style: GigTypography.small),
+              if (d.situacao.estaAberta) Text(Formatar.dataHora(d.prazoAnalise), style: GigTypography.small),
               EtiquetaPrazo(prazo: prazo),
             ]),
           ),

@@ -27,7 +27,7 @@ enum SituacaoDenuncia {
   final String api;
   final String rotulo;
 
-  bool get aberta => this == SituacaoDenuncia.aberta || this == SituacaoDenuncia.emAnalise;
+  bool get estaAberta => this == SituacaoDenuncia.aberta || this == SituacaoDenuncia.emAnalise;
 
   static SituacaoDenuncia deApi(String? valor) =>
       values.where((s) => s.api == valor).firstOrNull ?? SituacaoDenuncia.aberta;
@@ -85,7 +85,7 @@ DateTime? _data(Object? v) => v == null ? null : DateTime.parse(v as String);
 /// Prazo de análise (24 h alta / 3 dias úteis demais): "Atrasada" quando passou e ainda está aberta; "Vence hoje" no
 /// último dia.
 Prazo prazoDaDenuncia(SituacaoDenuncia situacao, DateTime? prazo, DateTime agora) {
-  if (!situacao.aberta || prazo == null) return Prazo.noPrazo;
+  if (!situacao.estaAberta || prazo == null) return Prazo.noPrazo;
   if (agora.isAfter(prazo)) return Prazo.atrasada;
   final p = prazo.toLocal();
   final a = agora.toLocal();
@@ -362,7 +362,7 @@ class DenunciaDetalhe {
   final List<HistoricoDenuncia> historico;
   final DecisaoTomada? decisao;
 
-  bool get aberta => situacao.aberta;
+  bool get aberta => situacao.estaAberta;
 
   factory DenunciaDetalhe.fromJson(Map<String, dynamic> json) {
     final denunciante = json['denunciante'] as Map<String, dynamic>?;

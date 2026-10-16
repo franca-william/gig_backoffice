@@ -82,7 +82,7 @@ class MockDenunciaRepository implements DenunciaRepository {
               criadaEm: criada.subtract(Duration(hours: i)),
             ),
         ],
-        decisao: situacao.aberta
+        decisao: situacao.estaAberta
             ? null
             : DecisaoTomada(procedente: false, acao: AcaoDenuncia.nenhuma, analisadaEm: criada.add(const Duration(hours: 5))),
       );
@@ -120,7 +120,7 @@ class MockDenunciaRepository implements DenunciaRepository {
     final busca = filtro.busca.trim().toLowerCase();
     final lista = _dados.values.where((d) {
       final situacaoOk = switch (filtro.situacao) {
-        FiltroDenuncia.abertas => d.situacao.aberta,
+        FiltroDenuncia.abertas => d.situacao.estaAberta,
         FiltroDenuncia.procedente => d.situacao == SituacaoDenuncia.procedente,
         FiltroDenuncia.improcedente => d.situacao == SituacaoDenuncia.improcedente,
         FiltroDenuncia.todas => true,

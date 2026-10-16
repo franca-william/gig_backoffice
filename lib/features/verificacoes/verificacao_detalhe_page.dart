@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +25,8 @@ class VerificacaoDetalhePage extends StatefulWidget {
   const VerificacaoDetalhePage({super.key, required this.id});
 
   /// Consulta pública do CNPJ na Receita Federal (o CNPJ vai copiado para colar lá).
-  static const consultaCnpj = 'https://solucoes.receita.fazenda.gov.br/Servicos/cnpjreva/Cadastro_Solicitacao.asp';
+  static const consultaCnpj =
+      'https://solucoes.receita.fazenda.gov.br/Servicos/cnpjreva/Cadastro_Solicitacao.asp';
 
   final String id;
 
@@ -70,7 +69,9 @@ class _VerificacaoDetalhePageState extends State<VerificacaoDetalhePage> {
       setState(() {
         _v = v;
         _erro = null;
-        if (_observacao.text.isEmpty) _observacao.text = v.observacaoInterna ?? '';
+        if (_observacao.text.isEmpty) {
+          _observacao.text = v.observacaoInterna ?? '';
+        }
       });
     } on SessaoExpiradaException {
       // volta para o login
@@ -79,7 +80,8 @@ class _VerificacaoDetalhePageState extends State<VerificacaoDetalhePage> {
     }
   }
 
-  Future<void> _decidir(Future<VerificacaoDetalhe> Function() acao, String sucesso) async {
+  Future<void> _decidir(
+      Future<VerificacaoDetalhe> Function() acao, String sucesso) async {
     setState(() => _decidindo = true);
     try {
       final v = await acao();
@@ -99,17 +101,21 @@ class _VerificacaoDetalhePageState extends State<VerificacaoDetalhePage> {
 
   Future<void> _aprovar(VerificacaoDetalhe v) async {
     if (v.semCnpj && _observacao.text.trim().isEmpty) {
-      GigToast.show('Registre na observação interna o que a equipe apurou sobre a casa.', type: GigToastType.error);
+      GigToast.show(
+          'Registre na observação interna o que a equipe apurou sobre a casa.',
+          type: GigToastType.error);
       return;
     }
     final confirmou = await showGigConfirmDialog(
       context,
       title: 'Aprovar verificação',
-      message: '${v.casa} ganha o selo Verificado. A casa vai receber uma notificação no app.',
+      message:
+          '${v.casa} ganha o selo Verificado. A casa vai receber uma notificação no app.',
       confirmLabel: 'Aprovar',
     );
     if (!confirmou || !mounted) return;
-    await _decidir(() => _repo.aprovar(v.id, observacaoInterna: _observacao.text),
+    await _decidir(
+        () => _repo.aprovar(v.id, observacaoInterna: _observacao.text),
         'Verificação aprovada. A casa foi notificada no app.');
   }
 
@@ -121,8 +127,13 @@ class _VerificacaoDetalhePageState extends State<VerificacaoDetalhePage> {
     );
     if (pedido == null || !mounted) return;
     await _decidir(
-      () => _repo.reprovar(v.id, recusas: pedido.recusas, mensagem: pedido.mensagem, observacaoInterna: _observacao.text),
-      v.semCnpj ? 'Pedido recusado. A casa foi notificada no app.' : 'Ajuste pedido. A casa foi notificada no app.',
+      () => _repo.reprovar(v.id,
+          recusas: pedido.recusas,
+          mensagem: pedido.mensagem,
+          observacaoInterna: _observacao.text),
+      v.semCnpj
+          ? 'Pedido recusado. A casa foi notificada no app.'
+          : 'Ajuste pedido. A casa foi notificada no app.',
     );
   }
 
@@ -144,19 +155,25 @@ class _VerificacaoDetalhePageState extends State<VerificacaoDetalhePage> {
         if (_erro != null)
           Text(_erro!, style: GigTypography.body)
         else if (v == null)
-          const Center(child: Padding(padding: EdgeInsets.all(GigSpacing.huge), child: CircularProgressIndicator()))
+          const Center(
+              child: Padding(
+                  padding: EdgeInsets.all(GigSpacing.huge),
+                  child: CircularProgressIndicator()))
         else ...[
           _cabecalho(v),
           const SizedBox(height: GigSpacing.xl),
           LayoutBuilder(builder: (context, c) {
-            final esquerda = v.semCnpj ? _Contato(v: v) : _Arquivos(v: v, repo: _repo);
+            final esquerda =
+                v.semCnpj ? _Contato(v: v) : _Arquivos(v: v, repo: _repo);
             final direita = _direita(v);
             if (c.maxWidth < 900) {
-              return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                esquerda,
-                const SizedBox(height: GigSpacing.xxl),
-                direita,
-              ]);
+              return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    esquerda,
+                    const SizedBox(height: GigSpacing.xxl),
+                    direita,
+                  ]);
             }
             return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Expanded(flex: 3, child: esquerda),
@@ -170,21 +187,33 @@ class _VerificacaoDetalhePageState extends State<VerificacaoDetalhePage> {
   }
 
   Widget _cabecalho(VerificacaoDetalhe v) {
-    final prazo = prazoDaVerificacao(v.situacao, v.prazoAnalise, getIt<Relogio>()());
+    final prazo =
+        prazoDaVerificacao(v.situacao, v.prazoAnalise, getIt<Relogio>()());
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      Wrap(spacing: GigSpacing.sm, runSpacing: GigSpacing.sm, crossAxisAlignment: WrapCrossAlignment.center, children: [
-        EtiquetaVerificacao(situacao: v.situacao),
-        EtiquetaPrazo(prazo: prazo),
-        if (v.semCnpj) const Etiqueta(texto: 'Sem CNPJ — contato', cor: GigColors.info),
-        if (v.casaVerificada) const Etiqueta(texto: 'Casa com selo', cor: GigColors.success),
-      ]),
+      Wrap(
+          spacing: GigSpacing.sm,
+          runSpacing: GigSpacing.sm,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            EtiquetaVerificacao(situacao: v.situacao),
+            EtiquetaPrazo(prazo: prazo),
+            if (v.semCnpj)
+              const Etiqueta(texto: 'Sem CNPJ — contato', cor: GigColors.info),
+            if (v.casaVerificada)
+              const Etiqueta(texto: 'Casa com selo', cor: GigColors.success),
+          ]),
       const SizedBox(height: GigSpacing.md),
       Text(v.casa, style: GigTypography.h1),
       Text(
         [
-          [v.bairro, v.cidade, v.estado].whereType<String>().where((t) => t.isNotEmpty).join(', '),
-          if (v.enviadaEm != null) 'enviada em ${Formatar.dataHora(v.enviadaEm!)}',
-          if (v.prazoAnalise != null) 'prazo ${Formatar.dataHora(v.prazoAnalise!)}',
+          [v.bairro, v.cidade, v.estado]
+              .whereType<String>()
+              .where((t) => t.isNotEmpty)
+              .join(', '),
+          if (v.enviadaEm != null)
+            'enviada em ${Formatar.dataHora(v.enviadaEm!)}',
+          if (v.prazoAnalise != null)
+            'prazo ${Formatar.dataHora(v.prazoAnalise!)}',
         ].where((t) => t.isNotEmpty).join(' · '),
         style: GigTypography.small,
       ),
@@ -201,7 +230,8 @@ class _VerificacaoDetalhePageState extends State<VerificacaoDetalhePage> {
       ],
       _Painel(
         titulo: 'Observação interna',
-        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           Text(
             v.semCnpj
                 ? 'Obrigatória para aprovar: registre o que a equipe apurou (ligação, visita, redes...). Só a equipe vê.'
@@ -216,7 +246,9 @@ class _VerificacaoDetalhePageState extends State<VerificacaoDetalhePage> {
             minLines: 3,
             maxLines: 8,
             maxLength: 2000,
-            decoration: const InputDecoration(hintText: 'Ex.: liguei no telefone do Google Maps e confirmei.'),
+            decoration: const InputDecoration(
+                hintText:
+                    'Ex.: liguei no telefone do Google Maps e confirmei.'),
           ),
         ]),
       ),
@@ -237,7 +269,8 @@ class _VerificacaoDetalhePageState extends State<VerificacaoDetalhePage> {
           onPressed: _decidindo ? null : () => _pedirAjuste(v),
         ),
         const SizedBox(height: GigSpacing.xs),
-        Text('A casa recebe uma notificação no app com a devolutiva.', style: GigTypography.caption, textAlign: TextAlign.center),
+        Text('A casa recebe uma notificação no app com a devolutiva.',
+            style: GigTypography.caption, textAlign: TextAlign.center),
       ] else
         _Devolutiva(v: v),
     ]);
@@ -259,10 +292,15 @@ class _Arquivos extends StatelessWidget {
     final selfie = v.arquivo(TipoArquivoVerificacao.selfie);
     final comprovante = v.arquivo(TipoArquivoVerificacao.comprovante);
     Widget cartao(ArquivoVerificacao? a, String titulo) => a == null
-        ? _Painel(titulo: titulo, child: Text('Não enviado.', style: GigTypography.bodyMuted))
-        : _CartaoArquivo(verificacaoId: v.id, arquivo: a, repo: repo, titulo: titulo);
+        ? _Painel(
+            titulo: titulo,
+            child: Text('Não enviado.', style: GigTypography.bodyMuted))
+        : _CartaoArquivo(
+            verificacaoId: v.id, arquivo: a, repo: repo, titulo: titulo);
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      Text('Documento: ${v.rotuloDocumento} · Comprovante: ${v.rotuloComprovante}', style: GigTypography.small),
+      Text(
+          'Documento: ${v.rotuloDocumento} · Comprovante: ${v.rotuloComprovante}',
+          style: GigTypography.small),
       const SizedBox(height: GigSpacing.md),
       // Documento e selfie lado a lado: é a comparação do rosto.
       Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -275,10 +313,14 @@ class _Arquivos extends StatelessWidget {
         Expanded(
           child: verso != null || (frente != null && !frente.ehPdf)
               ? cartao(verso, 'Verso do documento')
-              : _Painel(titulo: 'Verso do documento', child: Text('CNH digital em PDF: sem verso.', style: GigTypography.bodyMuted)),
+              : _Painel(
+                  titulo: 'Verso do documento',
+                  child: Text('CNH digital em PDF: sem verso.',
+                      style: GigTypography.bodyMuted)),
         ),
         const SizedBox(width: GigSpacing.lg),
-        Expanded(child: cartao(comprovante, 'Comprovante · ${v.rotuloComprovante}')),
+        Expanded(
+            child: cartao(comprovante, 'Comprovante · ${v.rotuloComprovante}')),
       ]),
     ]);
   }
@@ -286,7 +328,11 @@ class _Arquivos extends StatelessWidget {
 
 /// Um arquivo: baixa os bytes com o token (nunca há URL), mostra a imagem com marca d'água ou o botão do PDF.
 class _CartaoArquivo extends StatefulWidget {
-  const _CartaoArquivo({required this.verificacaoId, required this.arquivo, required this.repo, required this.titulo});
+  const _CartaoArquivo(
+      {required this.verificacaoId,
+      required this.arquivo,
+      required this.repo,
+      required this.titulo});
 
   final String verificacaoId;
   final ArquivoVerificacao arquivo;
@@ -305,7 +351,9 @@ class _CartaoArquivoState extends State<_CartaoArquivo> {
   void initState() {
     super.initState();
     // PDF só baixa quando a pessoa pede (cada abertura fica na auditoria).
-    if (widget.arquivo.disponivel && !widget.arquivo.ehPdf) _conteudo = _baixar();
+    if (widget.arquivo.disponivel && !widget.arquivo.ehPdf) {
+      _conteudo = _baixar();
+    }
   }
 
   Future<({Uint8List bytes, String contentType})> _baixar() =>
@@ -360,7 +408,8 @@ class _CartaoArquivoState extends State<_CartaoArquivo> {
       acao: Etiqueta(texto: a.situacao.rotulo, cor: corSituacao),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         if (!a.disponivel)
-          Text('Arquivo descartado (LGPD). Hash: ${a.sha256}', style: GigTypography.bodyMuted)
+          Text('Arquivo descartado (LGPD). Hash: ${a.sha256}',
+              style: GigTypography.bodyMuted)
         else if (a.ehPdf)
           GigButton.outline(
             key: Key('abrir-pdf-${a.tipo.api}'),
@@ -372,42 +421,55 @@ class _CartaoArquivoState extends State<_CartaoArquivo> {
           FutureBuilder<({Uint8List bytes, String contentType})>(
             future: _conteudo,
             builder: (context, s) {
-              if (s.hasError) return Text('${s.error}', style: GigTypography.bodyMuted);
-              if (!s.hasData) {
-                return const SizedBox(height: 220, child: Center(child: CircularProgressIndicator()));
+              if (s.hasError) {
+                return Text('${s.error}', style: GigTypography.bodyMuted);
               }
-              return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                InkWell(
-                  onTap: () => _ampliar(s.data!.bytes),
-                  child: SizedBox(
-                    height: 260,
-                    child: ClipRRect(
-                      borderRadius: GigRadius.button,
-                      child: ColoredBox(color: GigColors.background, child: _Imagem(bytes: s.data!.bytes, quartos: _quartos)),
+              if (!s.hasData) {
+                return const SizedBox(
+                    height: 220,
+                    child: Center(child: CircularProgressIndicator()));
+              }
+              return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    InkWell(
+                      onTap: () => _ampliar(s.data!.bytes),
+                      child: SizedBox(
+                        height: 260,
+                        child: ClipRRect(
+                          borderRadius: GigRadius.button,
+                          child: ColoredBox(
+                              color: GigColors.background,
+                              child: _Imagem(
+                                  bytes: s.data!.bytes, quartos: _quartos)),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  IconButton(
-                    tooltip: 'Girar',
-                    onPressed: () => setState(() => _quartos = (_quartos + 1) % 4),
-                    icon: const Icon(LucideIcons.rotateCw, size: 18),
-                  ),
-                  IconButton(
-                    tooltip: 'Ampliar',
-                    onPressed: () => _ampliar(s.data!.bytes),
-                    icon: const Icon(LucideIcons.maximize2, size: 18),
-                  ),
-                ]),
-              ]);
+                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                      IconButton(
+                        tooltip: 'Girar',
+                        onPressed: () =>
+                            setState(() => _quartos = (_quartos + 1) % 4),
+                        icon: const Icon(LucideIcons.rotateCw, size: 18),
+                      ),
+                      IconButton(
+                        tooltip: 'Ampliar',
+                        onPressed: () => _ampliar(s.data!.bytes),
+                        icon: const Icon(LucideIcons.maximize2, size: 18),
+                      ),
+                    ]),
+                  ]);
             },
           ),
         const SizedBox(height: GigSpacing.xs),
-        Text('${(a.tamanho / 1024).round()} KB · ${a.contentType}', style: GigTypography.caption),
+        Text('${(a.tamanho / 1024).round()} KB · ${a.contentType}',
+            style: GigTypography.caption),
         if (a.situacao == SituacaoArquivo.recusado) ...[
           const SizedBox(height: GigSpacing.sm),
-          Text('Motivo: ${a.motivo?.rotulo ?? a.motivoDescricao ?? '—'}', style: GigTypography.body),
-          if (a.comentario != null) Text('“${a.comentario}”', style: GigTypography.bodyMuted),
+          Text('Motivo: ${a.motivo?.rotulo ?? a.motivoDescricao ?? '—'}',
+              style: GigTypography.body),
+          if (a.comentario != null)
+            Text('“${a.comentario}”', style: GigTypography.bodyMuted),
         ],
       ]),
     );
@@ -423,26 +485,35 @@ class _Imagem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final quem = getIt.isRegistered<SessaoStore>() ? getIt<SessaoStore>().membro.value?.nome ?? '' : '';
-    return Stack(fit: StackFit.passthrough, alignment: Alignment.center, children: [
-      RotatedBox(
-        quarterTurns: quartos,
-        child: Image.memory(bytes, fit: BoxFit.contain, gaplessPlayback: true, filterQuality: FilterQuality.medium),
-      ),
-      IgnorePointer(
-        child: Center(
-          child: Transform.rotate(
-            angle: -0.5,
-            child: Text(
-              'GiG — uso interno${quem.isEmpty ? '' : ' — $quem'}',
-              key: const Key('marca-dagua'),
-              textAlign: TextAlign.center,
-              style: GigTypography.h3.copyWith(color: GigColors.text.withAlpha(70)),
+    final quem = getIt.isRegistered<SessaoStore>()
+        ? getIt<SessaoStore>().membro.value?.nome ?? ''
+        : '';
+    return Stack(
+        fit: StackFit.passthrough,
+        alignment: Alignment.center,
+        children: [
+          RotatedBox(
+            quarterTurns: quartos,
+            child: Image.memory(bytes,
+                fit: BoxFit.contain,
+                gaplessPlayback: true,
+                filterQuality: FilterQuality.medium),
+          ),
+          IgnorePointer(
+            child: Center(
+              child: Transform.rotate(
+                angle: -0.5,
+                child: Text(
+                  'GiG — uso interno${quem.isEmpty ? '' : ' — $quem'}',
+                  key: const Key('marca-dagua'),
+                  textAlign: TextAlign.center,
+                  style: GigTypography.h3
+                      .copyWith(color: GigColors.text.withAlpha(70)),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-    ]);
+        ]);
   }
 }
 
@@ -459,15 +530,18 @@ class _Contato extends StatelessWidget {
       key: const Key('contato-sem-cnpj'),
       titulo: 'Pedido de contato (casa sem CNPJ)',
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('A casa não tem CNPJ e pediu o selo. Entre em contato, confira se ela existe mesmo e registre o que '
-            'apurou na observação interna.', style: GigTypography.small),
+        Text(
+            'A casa não tem CNPJ e pediu o selo. Entre em contato, confira se ela existe mesmo e registre o que '
+            'apurou na observação interna.',
+            style: GigTypography.small),
         const SizedBox(height: GigSpacing.md),
         _Dado('Telefone', _telefone(v.contatoTelefone)),
         _Dado('Endereço', v.atuais.endereco ?? v.enviados.endereco),
         const SizedBox(height: GigSpacing.md),
         Text('MENSAGEM DA CASA', style: GigTypography.fieldLabel),
         const SizedBox(height: GigSpacing.xs),
-        SelectableText(v.contatoMensagem ?? '—', style: GigTypography.bodyLarge),
+        SelectableText(v.contatoMensagem ?? '—',
+            style: GigTypography.bodyLarge),
       ]),
     );
   }
@@ -499,15 +573,21 @@ class _Dados extends StatelessWidget {
             borderRadius: GigRadius.button,
             border: Border.all(color: GigColors.primaryBorder),
           ),
-          child: Text('A casa mudou CNPJ ou endereço depois do envio. Atual: '
-              '${formatarCnpj(v.atuais.cnpj)} · ${v.atuais.endereco ?? '—'}', style: GigTypography.small),
+          child: Text(
+              'A casa mudou CNPJ ou endereço depois do envio. Atual: '
+              '${formatarCnpj(v.atuais.cnpj)} · ${v.atuais.endereco ?? '—'}',
+              style: GigTypography.small),
         ),
         const SizedBox(height: GigSpacing.sm),
       ],
       _Dado('CNPJ', formatarCnpj(v.enviados.cnpj)),
       _Dado('Razão social', v.enviados.razaoSocial),
       _Dado('Endereço', v.enviados.endereco),
-      _Dado('Consentimento', v.consentimentoEm == null ? null : Formatar.dataHora(v.consentimentoEm!)),
+      _Dado(
+          'Consentimento',
+          v.consentimentoEm == null
+              ? null
+              : Formatar.dataHora(v.consentimentoEm!)),
       const SizedBox(height: GigSpacing.sm),
       Wrap(spacing: GigSpacing.sm, runSpacing: GigSpacing.sm, children: [
         OutlinedButton.icon(
@@ -515,7 +595,8 @@ class _Dados extends StatelessWidget {
           onPressed: v.enviados.cnpj == null
               ? null
               : () async {
-                  await Clipboard.setData(ClipboardData(text: v.enviados.cnpj!));
+                  await Clipboard.setData(
+                      ClipboardData(text: v.enviados.cnpj!));
                   GigToast.show('CNPJ copiado.');
                 },
           icon: const Icon(LucideIcons.copy, size: 14),
@@ -523,7 +604,8 @@ class _Dados extends StatelessWidget {
         ),
         OutlinedButton.icon(
           key: const Key('consultar-receita'),
-          onPressed: () => abrirEnderecoEmNovaAba(VerificacaoDetalhePage.consultaCnpj),
+          onPressed: () =>
+              abrirEnderecoEmNovaAba(VerificacaoDetalhePage.consultaCnpj),
           icon: const Icon(LucideIcons.externalLink, size: 14),
           label: const Text('Consultar na Receita'),
         ),
@@ -552,7 +634,8 @@ class _OQueConferir extends StatelessWidget {
           child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const Padding(
               padding: EdgeInsets.only(top: 3),
-              child: Icon(LucideIcons.checkSquare, size: 14, color: GigColors.primary),
+              child: Icon(LucideIcons.checkSquare,
+                  size: 14, color: GigColors.primary),
             ),
             const SizedBox(width: GigSpacing.sm),
             Expanded(child: Text(t, style: GigTypography.body)),
@@ -603,14 +686,18 @@ class _Dado extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: GigSpacing.xxs),
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SizedBox(width: 120, child: Text(rotulo, style: GigTypography.small)),
-        Expanded(child: SelectableText(valor == null || valor!.isEmpty ? '—' : valor!, style: GigTypography.body)),
+        Expanded(
+            child: SelectableText(
+                valor == null || valor!.isEmpty ? '—' : valor!,
+                style: GigTypography.body)),
       ]),
     );
   }
 }
 
 class _Painel extends StatelessWidget {
-  const _Painel({super.key, required this.titulo, required this.child, this.acao});
+  const _Painel(
+      {super.key, required this.titulo, required this.child, this.acao});
 
   final String titulo;
   final Widget child;
@@ -627,7 +714,9 @@ class _Painel extends StatelessWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
-          Expanded(child: Text(titulo.toUpperCase(), style: GigTypography.fieldLabel)),
+          Expanded(
+              child:
+                  Text(titulo.toUpperCase(), style: GigTypography.fieldLabel)),
           if (acao != null) acao!,
         ]),
         const SizedBox(height: GigSpacing.md),
@@ -685,7 +774,9 @@ class _DialogoAjusteState extends State<_DialogoAjuste> {
 
   String get _previa {
     final n = _escolhidos.length;
-    if (_semCnpj) return 'Não foi possível verificar sua casa agora · Toque para ver a mensagem da equipe.';
+    if (_semCnpj) {
+      return 'Não foi possível verificar sua casa agora · Toque para ver a mensagem da equipe.';
+    }
     return 'Precisamos de um ajuste na sua verificação · $n ${n == 1 ? 'documento precisa' : 'documentos precisam'} '
         'ser reenviado${n == 1 ? '' : 's'}. Toque para ver o que corrigir.';
   }
@@ -693,9 +784,15 @@ class _DialogoAjusteState extends State<_DialogoAjuste> {
   void _confirmar() {
     final recusas = [
       for (final e in _escolhidos.entries)
-        RecusaDeArquivo(arquivoId: e.key, motivo: e.value!, comentario: _comentarios[e.key]?.text),
+        RecusaDeArquivo(
+            arquivoId: e.key,
+            motivo: e.value!,
+            comentario: _comentarios[e.key]?.text),
     ];
-    Navigator.pop(context, _Ajuste(recusas, _mensagem.text.trim().isEmpty ? null : _mensagem.text.trim()));
+    Navigator.pop(
+        context,
+        _Ajuste(recusas,
+            _mensagem.text.trim().isEmpty ? null : _mensagem.text.trim()));
   }
 
   @override
@@ -703,64 +800,81 @@ class _DialogoAjusteState extends State<_DialogoAjuste> {
     final v = widget.verificacao;
     return Dialog(
       backgroundColor: GigColors.surface,
-      shape: const RoundedRectangleBorder(borderRadius: GigRadius.card, side: BorderSide(color: GigColors.border)),
+      shape: const RoundedRectangleBorder(
+          borderRadius: GigRadius.card,
+          side: BorderSide(color: GigColors.border)),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 640, maxHeight: 760),
         child: Padding(
           padding: const EdgeInsets.all(GigSpacing.xxl),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, mainAxisSize: MainAxisSize.min, children: [
-            Text(_semCnpj ? 'Recusar pedido' : 'Pedir ajuste', style: GigTypography.h2),
-            const SizedBox(height: GigSpacing.xs),
-            Text(
-              _semCnpj
-                  ? 'A casa lê a mensagem no app, assinada como Equipe GiG.'
-                  : 'Escolha o que a casa precisa reenviar. O resto fica aprovado e não precisa mandar de novo.',
-              style: GigTypography.small,
-            ),
-            const SizedBox(height: GigSpacing.lg),
-            Flexible(
-              child: ListView(shrinkWrap: true, children: [
-                if (!_semCnpj)
-                  for (final a in v.arquivos) _linhaArquivo(a),
-                const SizedBox(height: GigSpacing.md),
-                TextField(
-                  key: const Key('mensagem-para-casa'),
-                  controller: _mensagem,
-                  minLines: 2,
-                  maxLines: 5,
-                  maxLength: 1000,
-                  decoration: InputDecoration(
-                    labelText: _semCnpj ? 'Mensagem para a casa (obrigatória)' : 'Mensagem para a casa (opcional)',
-                  ),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(_semCnpj ? 'Recusar pedido' : 'Pedir ajuste',
+                    style: GigTypography.h2),
+                const SizedBox(height: GigSpacing.xs),
+                Text(
+                  _semCnpj
+                      ? 'A casa lê a mensagem no app, assinada como Equipe GiG.'
+                      : 'Escolha o que a casa precisa reenviar. O resto fica aprovado e não precisa mandar de novo.',
+                  style: GigTypography.small,
                 ),
-                const SizedBox(height: GigSpacing.sm),
-                Container(
-                  key: const Key('previa-notificacao'),
-                  padding: const EdgeInsets.all(GigSpacing.md),
-                  decoration: BoxDecoration(
-                    color: GigColors.background,
-                    borderRadius: GigRadius.button,
-                    border: Border.all(color: GigColors.border),
-                  ),
-                  child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    const Icon(LucideIcons.bell, size: 16, color: GigColors.primary),
-                    const SizedBox(width: GigSpacing.sm),
-                    Expanded(child: Text('Notificação no app: $_previa', style: GigTypography.small)),
+                const SizedBox(height: GigSpacing.lg),
+                Flexible(
+                  child: ListView(shrinkWrap: true, children: [
+                    if (!_semCnpj)
+                      for (final a in v.arquivos) _linhaArquivo(a),
+                    const SizedBox(height: GigSpacing.md),
+                    TextField(
+                      key: const Key('mensagem-para-casa'),
+                      controller: _mensagem,
+                      minLines: 2,
+                      maxLines: 5,
+                      maxLength: 1000,
+                      decoration: InputDecoration(
+                        labelText: _semCnpj
+                            ? 'Mensagem para a casa (obrigatória)'
+                            : 'Mensagem para a casa (opcional)',
+                      ),
+                    ),
+                    const SizedBox(height: GigSpacing.sm),
+                    Container(
+                      key: const Key('previa-notificacao'),
+                      padding: const EdgeInsets.all(GigSpacing.md),
+                      decoration: BoxDecoration(
+                        color: GigColors.background,
+                        borderRadius: GigRadius.button,
+                        border: Border.all(color: GigColors.border),
+                      ),
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(LucideIcons.bell,
+                                size: 16, color: GigColors.primary),
+                            const SizedBox(width: GigSpacing.sm),
+                            Expanded(
+                                child: Text('Notificação no app: $_previa',
+                                    style: GigTypography.small)),
+                          ]),
+                    ),
                   ]),
                 ),
+                const SizedBox(height: GigSpacing.lg),
+                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancelar')),
+                  const SizedBox(width: GigSpacing.sm),
+                  GigButton(
+                    key: const Key('confirmar-ajuste'),
+                    label: _semCnpj
+                        ? 'Recusar e notificar'
+                        : 'Pedir ajuste e notificar',
+                    onPressed: _valido ? _confirmar : null,
+                  ),
+                ]),
               ]),
-            ),
-            const SizedBox(height: GigSpacing.lg),
-            Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
-              const SizedBox(width: GigSpacing.sm),
-              GigButton(
-                key: const Key('confirmar-ajuste'),
-                label: _semCnpj ? 'Recusar e notificar' : 'Pedir ajuste e notificar',
-                onPressed: _valido ? _confirmar : null,
-              ),
-            ]),
-          ]),
         ),
       ),
     );
@@ -798,7 +912,10 @@ class _DialogoAjusteState extends State<_DialogoAjuste> {
                   value: _escolhidos[a.id],
                   hint: const Text('Motivo'),
                   dropdownColor: GigColors.surfaceHigh,
-                  items: [for (final m in MotivoRecusa.values) DropdownMenuItem(value: m, child: Text(m.rotulo))],
+                  items: [
+                    for (final m in MotivoRecusa.values)
+                      DropdownMenuItem(value: m, child: Text(m.rotulo))
+                  ],
                   onChanged: (m) => setState(() => _escolhidos[a.id] = m),
                 ),
               ),
@@ -808,7 +925,8 @@ class _DialogoAjusteState extends State<_DialogoAjuste> {
                   key: Key('comentario-${a.tipo.api}'),
                   controller: _comentarios[a.id],
                   maxLength: 500,
-                  decoration: const InputDecoration(hintText: 'Comentário (opcional)'),
+                  decoration:
+                      const InputDecoration(hintText: 'Comentário (opcional)'),
                 ),
               ),
             ]),
