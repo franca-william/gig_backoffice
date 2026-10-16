@@ -100,7 +100,7 @@ class MockDashboardRepository implements DashboardRepository {
         ],
         'contratos': [
           {
-            'numero': 'GIG-2026-000042',
+            'numero': 'GiG-2026-000042',
             'tipo': 'TRAVADO',
             'situacao': 'GERANDO',
             'evento': 'Noite do Forró',

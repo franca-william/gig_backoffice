@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/theme.dart';
+import '../utils/marca.dart';
 
 enum GigButtonVariant { primary, outline, danger, ghost }
 
@@ -93,7 +94,7 @@ class GigButton extends StatelessWidget {
       _ => GigTypography.buttonFlex,
     };
 
-    final text = variant == GigButtonVariant.primary && _size == GigButtonSize.large ? label.toUpperCase() : label;
+    final text = variant == GigButtonVariant.primary && _size == GigButtonSize.large ? label.emCaixaAlta : label;
     final disabled = onPressed == null || loading;
 
     final content = loading

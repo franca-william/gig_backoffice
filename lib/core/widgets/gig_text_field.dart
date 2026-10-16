@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../theme/theme.dart';
+import '../utils/marca.dart';
 
 /// Campo de formulário com rótulo em caixa alta acima (padrão das telas de acesso).
 /// Com [isPassword] mostra o botão de olho para alternar a visibilidade.
@@ -93,7 +94,7 @@ class _GigTextFieldState extends State<GigTextField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(widget.label!.toUpperCase(), style: GigTypography.fieldLabel),
+        Text(widget.label!.emCaixaAlta, style: GigTypography.fieldLabel),
         const SizedBox(height: 6),
         field,
       ],

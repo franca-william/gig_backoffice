@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/theme.dart';
+import '../utils/marca.dart';
 
 /// Rótulo de status em caixa alta (ex.: ABERTO em azul, CONFIRMADO em âmbar).
 class StatusTag extends StatelessWidget {
@@ -27,7 +28,7 @@ class StatusTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(label.toUpperCase(), style: GigTypography.tag.copyWith(color: color));
+    return Text(label.emCaixaAlta, style: GigTypography.tag.copyWith(color: color));
   }
 }
 
@@ -43,7 +44,7 @@ class ThemeBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: const BoxDecoration(color: GigColors.primary, borderRadius: GigRadius.pillAll),
       child: Text(
-        label.toUpperCase(),
+        label.emCaixaAlta,
         style: GigTypography.tag.copyWith(color: GigColors.onPrimary, fontWeight: FontWeight.w700, letterSpacing: 0.8),
       ),
     );

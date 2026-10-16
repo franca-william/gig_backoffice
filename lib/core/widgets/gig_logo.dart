@@ -121,7 +121,7 @@ class GigLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'GIG',
+      label: 'GiG',
       image: true,
       excludeSemantics: true,
       child: SizedBox(
@@ -150,7 +150,7 @@ class GigPinSymbol extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'GIG',
+      label: 'GiG',
       image: true,
       excludeSemantics: true,
       child: SizedBox(
