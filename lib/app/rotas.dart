@@ -8,6 +8,10 @@ abstract final class Rotas {
   static const verificacoes = '/verificacoes';
   static String verificacao(String id) => '/verificacoes/$id';
 
+  /// E31 (E3 do backoffice) — denúncias de perfis.
+  static const denuncias = '/denuncias';
+  static String denuncia(String id) => '/denuncias/$id';
+
   /// `/dashboard?aba=marketplace&periodo=30` (E1: a aba e o período ficam na URL).
   static String dashboardCom({required String aba, required int periodo}) =>
       Uri(path: dashboard, queryParameters: {'aba': aba, 'periodo': '$periodo'})

@@ -171,6 +171,10 @@ class BackofficeApi {
         problema['codigo'] == 'verificacao-ja-analisada') {
       throw const VerificacaoJaAnalisadaException();
     }
+    if (resposta.statusCode == 409 &&
+        problema['codigo'] == 'denuncia-ja-analisada') {
+      throw const DenunciaJaAnalisadaException();
+    }
     throw BackofficeException(problema['detail'] as String? ??
         'Não foi possível completar (erro ${resposta.statusCode}).');
   }

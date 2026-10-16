@@ -9,6 +9,7 @@ import '../../app/sessao_store.dart';
 import '../../core/theme/theme.dart';
 import '../../core/widgets/gig_logo.dart';
 import '../dashboard/dashboard_store.dart';
+import '../denuncias/denuncias_store.dart';
 import '../sugestoes/sugestoes_store.dart';
 import '../verificacoes/verificacoes_store.dart';
 
@@ -34,6 +35,7 @@ class _LayoutBackofficeState extends State<LayoutBackoffice> {
     super.initState();
     getIt<SugestoesStore>().atualizarContagem();
     getIt<VerificacoesStore>().atualizarContagem();
+    getIt<DenunciasStore>().atualizarContagem();
     // Depois do quadro: o store é observado pelo menu e pelo dashboard que estão sendo montados agora.
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => getIt<DashboardStore>().atualizarContador());
@@ -93,6 +95,7 @@ class MenuLateral extends StatelessWidget {
     final sugestoes = getIt<SugestoesStore>();
     final dashboard = getIt<DashboardStore>();
     final verificacoes = getIt<VerificacoesStore>();
+    final denuncias = getIt<DenunciasStore>();
     void ir(String rota) {
       aoNavegar?.call();
       context.go(rota);
@@ -155,6 +158,17 @@ class MenuLateral extends StatelessWidget {
                 aoTocar: () => ir(Rotas.verificacoes),
               );
             }),
+            // E31 (E3 do backoffice) — denúncias abertas.
+            Observer(builder: (_) {
+              final n = denuncias.contagem.value.abertas;
+              return _ItemMenu(
+                key: const Key('menu-denuncias'),
+                icone: LucideIcons.flag,
+                rotulo: n > 0 ? 'Denúncias ($n)' : 'Denúncias',
+                ativo: local.startsWith(Rotas.denuncias),
+                aoTocar: () => ir(Rotas.denuncias),
+              );
+            }),
             const Spacer(),
             const Divider(),
             Padding(
@@ -178,6 +192,7 @@ class MenuLateral extends StatelessWidget {
                           await sessao.sair();
                           sugestoes.limpar();
                           verificacoes.limpar();
+                          denuncias.limpar();
                           dashboard.limpar();
                         },
                         icon: const Icon(LucideIcons.logOut, size: 16),

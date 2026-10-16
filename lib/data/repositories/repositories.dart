@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import '../models/dashboard.dart';
+import '../models/denuncia.dart';
 import '../models/models.dart';
 import '../models/verificacao.dart';
 
@@ -30,6 +31,13 @@ class VerificacaoJaAnalisadaException implements Exception {
   @override
   String toString() =>
       'Outra pessoa da equipe acabou de dar a devolutiva desta verificação.';
+}
+
+/// E31 — outra pessoa da equipe já decidiu esta denúncia (409).
+class DenunciaJaAnalisadaException implements Exception {
+  const DenunciaJaAnalisadaException();
+  @override
+  String toString() => 'Outra pessoa da equipe acabou de decidir esta denúncia.';
 }
 
 class BackofficeException implements Exception {
@@ -80,6 +88,20 @@ abstract interface class VerificacaoRepository {
       {List<RecusaDeArquivo> recusas = const [],
       String? mensagem,
       String? observacaoInterna});
+}
+
+/// E31 (E3 do backoffice) — denúncias de perfis. A decisão vale para todas as denúncias abertas sobre o mesmo perfil;
+/// quem denunciou recebe "Analisamos sua denúncia" e quem foi denunciado, o aviso da equipe (menos no banimento).
+abstract interface class DenunciaRepository {
+  Future<PaginaDenuncias> listar(FiltroDenuncias filtro, {int pagina = 0});
+  Future<ContagemDenuncias> contagem();
+  Future<DenunciaDetalhe> detalhe(String id);
+
+  /// Foto do retrato (cópia privada, baixada com o token). Cada abertura é auditada.
+  Future<({Uint8List bytes, String contentType})> foto(String id);
+
+  /// Lança [DenunciaJaAnalisadaException] (409) se outra pessoa decidiu antes.
+  Future<DenunciaDetalhe> decidir(String id, DecisaoDenuncia decisao);
 }
 
 /// E1 — dashboard em abas. Uma chamada por aba; [atualizar] ignora o cache de 5 min do backend.

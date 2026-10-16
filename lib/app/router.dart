@@ -5,6 +5,8 @@ import 'package:mobx/mobx.dart';
 import '../data/models/dashboard.dart';
 import '../features/auth/login_page.dart';
 import '../features/dashboard/dashboard_page.dart';
+import '../features/denuncias/denuncia_detalhe_page.dart';
+import '../features/denuncias/denuncias_page.dart';
 import '../features/shell/layout_backoffice.dart';
 import '../features/sugestoes/sugestao_detalhe_page.dart';
 import '../features/sugestoes/sugestoes_page.dart';
@@ -77,6 +79,18 @@ GoRouter criarRouter(SessaoStore sessao,
                 path: ':id',
                 pageBuilder: (c, s) => NoTransitionPage(
                     child: VerificacaoDetalhePage(id: s.pathParameters['id']!)),
+              ),
+            ],
+          ),
+          // E31 (E3 do backoffice) — denúncias de perfis
+          GoRoute(
+            path: Rotas.denuncias,
+            pageBuilder: (c, s) => const NoTransitionPage(child: DenunciasPage()),
+            routes: [
+              GoRoute(
+                path: ':id',
+                pageBuilder: (c, s) => NoTransitionPage(
+                    child: DenunciaDetalhePage(id: s.pathParameters['id']!)),
               ),
             ],
           ),
