@@ -2,7 +2,9 @@ import 'dart:typed_data';
 
 import '../models/dashboard.dart';
 import '../models/denuncia.dart';
+import '../models/impulso.dart';
 import '../models/models.dart';
+import '../models/usuario.dart';
 import '../models/verificacao.dart';
 
 /// Erros que as telas tratam.
@@ -111,4 +113,31 @@ abstract interface class DashboardRepository {
   Future<Crescimento> crescimento(int periodo, {bool atualizar = false});
   Future<Curtidores> curtidores(int periodo, {bool atualizar = false});
   Future<Qualidade> qualidade(int periodo, {bool atualizar = false});
+}
+
+/// E5 (backoffice) — consulta de usuários (somente leitura).
+abstract interface class UsuarioRepository {
+  Future<PaginaUsuarios> listar(FiltroUsuarios filtro, {int pagina = 0});
+  Future<UsuarioDetalhe> detalhe(String id);
+}
+
+/// E40 — Impulsionar evento: textos de push para aprovar, impulsos (estorno só no Google Play), a flag "passível de
+/// impulsionar" por casa (com histórico), pacotes e parâmetros. Toda alteração fica na auditoria do backend.
+abstract interface class ImpulsoRepository {
+  /// Número do menu: textos de push esperando a equipe.
+  Future<int> textosEmAnalise();
+  Future<List<TextoPush>> textos();
+  Future<void> aprovarTexto(String campanhaId);
+  Future<void> recusarTexto(String campanhaId, String motivo);
+  Future<PaginaImpulsos> impulsos({SituacaoImpulso? situacao, String busca = '', int pagina = 0});
+  Future<ImpulsoDetalhe> detalhe(String id);
+  Future<void> estornar(String id);
+  Future<({List<CasaImpulso> itens, int totalPaginas})> casas(
+      {String busca = '', bool soHabilitadas = false, int pagina = 0});
+  Future<List<HistoricoFlag>> historico(String casaId);
+  Future<void> definirFlag(String casaId, {required bool habilitada, String? motivo});
+  Future<List<ProdutoImpulso>> produtos();
+  Future<ProdutoImpulso> ajustarProduto(String id, {int? alcance, required bool ativo});
+  Future<List<ParametroImpulso>> parametros();
+  Future<ParametroImpulso> definirParametro(String chave, int valor);
 }

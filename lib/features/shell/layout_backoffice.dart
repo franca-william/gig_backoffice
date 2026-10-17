@@ -11,6 +11,8 @@ import '../../core/widgets/gig_logo.dart';
 import '../dashboard/dashboard_store.dart';
 import '../denuncias/denuncias_store.dart';
 import '../sugestoes/sugestoes_store.dart';
+import '../impulsos/impulsos_store.dart';
+import '../usuarios/usuarios_store.dart';
 import '../verificacoes/verificacoes_store.dart';
 
 /// Menu lateral fixo (240 px) a partir de 1024 px de largura; abaixo disso vira gaveta.
@@ -36,6 +38,7 @@ class _LayoutBackofficeState extends State<LayoutBackoffice> {
     getIt<SugestoesStore>().atualizarContagem();
     getIt<VerificacoesStore>().atualizarContagem();
     getIt<DenunciasStore>().atualizarContagem();
+    getIt<ImpulsosStore>().atualizarContagem();
     // Depois do quadro: o store é observado pelo menu e pelo dashboard que estão sendo montados agora.
     WidgetsBinding.instance.addPostFrameCallback(
         (_) => getIt<DashboardStore>().atualizarContador());
@@ -68,7 +71,9 @@ class _LayoutBackofficeState extends State<LayoutBackoffice> {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: GigColors.surface,
-          title: Text('GiG Backoffice', style: GigTypography.h3),
+          title: const Align(
+              alignment: Alignment.centerLeft,
+              child: GigPinSymbol(largura: 28)),
         ),
         drawer: Drawer(
           width: LayoutBackoffice.larguraMenu,
@@ -116,17 +121,10 @@ class MenuLateral extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(
                   GigSpacing.xl, GigSpacing.xxl, GigSpacing.xl, GigSpacing.xxl),
-              child: Row(children: [
-                const GigLogo(largura: 64),
-                const SizedBox(width: GigSpacing.sm),
-                Flexible(
-                  child: Text('Backoffice',
-                      style: GigTypography.h3
-                          .copyWith(color: GigColors.textSubtle),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
-                ),
-              ]),
+              // Só o símbolo da marca: sem o nome "GiG" e sem o texto "Backoffice".
+              child: const Align(
+                  alignment: Alignment.centerLeft,
+                  child: GigPinSymbol(largura: 40)),
             ),
             Observer(builder: (_) {
               final n = dashboard.contador.value;
@@ -169,6 +167,25 @@ class MenuLateral extends StatelessWidget {
                 aoTocar: () => ir(Rotas.denuncias),
               );
             }),
+            // E40 — impulsos (número = textos de push esperando a equipe).
+            Observer(builder: (_) {
+              final n = getIt<ImpulsosStore>().textosEmAnalise.value;
+              return _ItemMenu(
+                key: const Key('menu-impulsos'),
+                icone: LucideIcons.barChart2,
+                rotulo: n > 0 ? 'Impulsos ($n)' : 'Impulsos',
+                ativo: local.startsWith(Rotas.impulsos),
+                aoTocar: () => ir(Rotas.impulsos),
+              );
+            }),
+            // E5 (backoffice) — consulta de usuários.
+            _ItemMenu(
+              key: const Key('menu-usuarios'),
+              icone: LucideIcons.users,
+              rotulo: 'Usuários',
+              ativo: local.startsWith(Rotas.usuarios),
+              aoTocar: () => ir(Rotas.usuarios),
+            ),
             const Spacer(),
             const Divider(),
             Padding(
@@ -193,6 +210,8 @@ class MenuLateral extends StatelessWidget {
                           sugestoes.limpar();
                           verificacoes.limpar();
                           denuncias.limpar();
+                          getIt<UsuariosStore>().limpar();
+                          getIt<ImpulsosStore>().limpar();
                           dashboard.limpar();
                         },
                         icon: const Icon(LucideIcons.logOut, size: 16),

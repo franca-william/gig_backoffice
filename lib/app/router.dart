@@ -10,6 +10,10 @@ import '../features/denuncias/denuncias_page.dart';
 import '../features/shell/layout_backoffice.dart';
 import '../features/sugestoes/sugestao_detalhe_page.dart';
 import '../features/sugestoes/sugestoes_page.dart';
+import '../features/impulsos/impulso_detalhe_page.dart';
+import '../features/impulsos/impulsos_page.dart';
+import '../features/usuarios/usuario_detalhe_page.dart';
+import '../features/usuarios/usuarios_page.dart';
 import '../features/verificacoes/verificacao_detalhe_page.dart';
 import '../features/verificacoes/verificacoes_page.dart';
 import 'rotas.dart';
@@ -79,6 +83,17 @@ GoRouter criarRouter(SessaoStore sessao,
                 path: ':id',
                 pageBuilder: (c, s) => NoTransitionPage(
                     child: VerificacaoDetalhePage(id: s.pathParameters['id']!)),
+              ),
+            ],
+          ),
+          // E40 — impulsos
+          GoRoute(
+            path: Rotas.impulsos,
+            pageBuilder: (c, s) => const NoTransitionPage(child: ImpulsosPage()),
+            routes: [
+              GoRoute(
+                path: ':id',
+                pageBuilder: (c, s) => NoTransitionPage(child: ImpulsoDetalhePage(id: s.pathParameters['id']!)),
               ),
             ],
           ),

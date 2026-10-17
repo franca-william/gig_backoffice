@@ -109,6 +109,25 @@ class BackofficeApi {
             body: corpo == null ? null : jsonEncode(corpo),
           ));
 
+  /// E40 — PUT com corpo JSON (flag da casa, pacotes e parâmetros de impulso).
+  Future<Map<String, dynamic>> put(String caminho, {Object? corpo}) =>
+      _autenticada(() => _cliente.put(
+            _uri(caminho),
+            headers: _cabecalhos(json: corpo != null),
+            body: corpo == null ? null : jsonEncode(corpo),
+          ));
+
+  /// E40 — GET de uma lista JSON (histórico da flag, pacotes e parâmetros de impulso).
+  Future<List<dynamic>> getLista(String caminho) async {
+    final resposta = await _autenticadaBruta(() => _cliente.get(_uri(caminho), headers: _cabecalhos()));
+    if (resposta.statusCode < 200 || resposta.statusCode >= 300) {
+      _json(resposta); // lança o erro com a mensagem do backend
+    }
+    final texto = utf8.decode(resposta.bodyBytes);
+    final Object? corpo = texto.isEmpty ? null : jsonDecode(texto);
+    return corpo is List<dynamic> ? corpo : const [];
+  }
+
   /// E30 — conteúdo binário (arquivo da verificação), com a mesma renovação de sessão das outras chamadas.
   Future<({Uint8List bytes, String contentType})> bytes(String caminho) async {
     final resposta =

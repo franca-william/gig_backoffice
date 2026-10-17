@@ -12,6 +12,14 @@ abstract final class Rotas {
   static const denuncias = '/denuncias';
   static String denuncia(String id) => '/denuncias/$id';
 
+  /// E5 (backoffice) — consulta de usuários.
+  static const usuarios = '/usuarios';
+  static String usuario(String id) => '/usuarios/$id';
+
+  /// E40 — impulsos (textos de push, impulsos, casas que podem impulsionar, pacotes e parâmetros).
+  static const impulsos = '/impulsos';
+  static String impulso(String id) => '/impulsos/$id';
+
   /// `/dashboard?aba=marketplace&periodo=30` (E1: a aba e o período ficam na URL).
   static String dashboardCom({required String aba, required int periodo}) =>
       Uri(path: dashboard, queryParameters: {'aba': aba, 'periodo': '$periodo'})

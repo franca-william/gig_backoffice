@@ -1,17 +1,23 @@
 import 'package:get_it/get_it.dart';
 
 import '../data/api/api_denuncia_repository.dart';
+import '../data/api/api_impulso_repository.dart';
 import '../data/api/api_repositories.dart';
+import '../data/api/api_usuario_repository.dart';
 import '../data/api/api_verificacao_repository.dart';
 import '../data/api/backoffice_api.dart';
 import '../data/mock/mock_dashboard.dart';
 import '../data/mock/mock_denuncias.dart';
+import '../data/mock/mock_impulsos.dart';
 import '../data/mock/mock_repositories.dart';
+import '../data/mock/mock_usuarios.dart';
 import '../data/mock/mock_verificacoes.dart';
 import '../data/repositories/repositories.dart';
 import '../features/dashboard/dashboard_store.dart';
 import '../features/denuncias/denuncias_store.dart';
+import '../features/impulsos/impulsos_store.dart';
 import '../features/sugestoes/sugestoes_store.dart';
+import '../features/usuarios/usuarios_store.dart';
 import '../features/verificacoes/verificacoes_store.dart';
 import 'sessao_store.dart';
 
@@ -28,6 +34,8 @@ void configurarDependencias(
     DashboardRepository? dashboard,
     VerificacaoRepository? verificacoes,
     DenunciaRepository? denuncias,
+    UsuarioRepository? usuarios,
+    ImpulsoRepository? impulsos,
     Relogio? relogio}) {
   getIt.allowReassignment = true;
   final agora = relogio ?? DateTime.now;
@@ -38,6 +46,8 @@ void configurarDependencias(
       dashboard != null ||
       verificacoes != null ||
       denuncias != null ||
+      usuarios != null ||
+      impulsos != null ||
       !usarApi) {
     getIt
       ..registerSingleton<SessaoRepository>(sessao ?? MockSessaoRepository())
@@ -48,7 +58,11 @@ void configurarDependencias(
       ..registerSingleton<VerificacaoRepository>(
           verificacoes ?? MockVerificacaoRepository(relogio: agora))
       ..registerSingleton<DenunciaRepository>(
-          denuncias ?? MockDenunciaRepository(relogio: agora));
+          denuncias ?? MockDenunciaRepository(relogio: agora))
+      ..registerSingleton<UsuarioRepository>(
+          usuarios ?? MockUsuarioRepository(relogio: agora))
+      ..registerSingleton<ImpulsoRepository>(
+          impulsos ?? MockImpulsoRepository(relogio: agora));
   } else {
     final api = BackofficeApi();
     getIt
@@ -57,7 +71,9 @@ void configurarDependencias(
       ..registerSingleton<SugestaoRepository>(ApiSugestaoRepository(api))
       ..registerSingleton<DashboardRepository>(ApiDashboardRepository(api))
       ..registerSingleton<VerificacaoRepository>(ApiVerificacaoRepository(api))
-      ..registerSingleton<DenunciaRepository>(ApiDenunciaRepository(api));
+      ..registerSingleton<DenunciaRepository>(ApiDenunciaRepository(api))
+      ..registerSingleton<UsuarioRepository>(ApiUsuarioRepository(api))
+      ..registerSingleton<ImpulsoRepository>(ApiImpulsoRepository(api));
   }
 
   final sessaoStore = SessaoStore(getIt());
@@ -66,7 +82,9 @@ void configurarDependencias(
     ..registerSingleton<SugestoesStore>(SugestoesStore(getIt()))
     ..registerSingleton<DashboardStore>(DashboardStore(getIt()))
     ..registerSingleton<VerificacoesStore>(VerificacoesStore(getIt()))
-    ..registerSingleton<DenunciasStore>(DenunciasStore(getIt()));
+    ..registerSingleton<DenunciasStore>(DenunciasStore(getIt()))
+    ..registerSingleton<UsuariosStore>(UsuariosStore(getIt()))
+    ..registerSingleton<ImpulsosStore>(ImpulsosStore(getIt()));
 
   if (getIt.isRegistered<BackofficeApi>()) {
     getIt<BackofficeApi>().aoExpirar = sessaoStore.expirou;
