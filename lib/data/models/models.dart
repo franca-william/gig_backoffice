@@ -190,6 +190,7 @@ class SugestaoDetalhe {
     this.resposta,
     this.respondidaEm,
     this.respondidaPor,
+    this.implementadaEm,
   });
 
   final String id;
@@ -206,6 +207,11 @@ class SugestaoDetalhe {
   final String? resposta;
   final DateTime? respondidaEm;
   final String? respondidaPor;
+
+  /// E39 — quando a equipe marcou como implementada (null = ainda não).
+  final DateTime? implementadaEm;
+
+  bool get implementada => implementadaEm != null;
 
   String get nomeExibido => nome ?? 'Usuário excluído';
   bool get respondida => situacao == SituacaoSugestao.respondida;
@@ -233,6 +239,7 @@ class SugestaoDetalhe {
         resposta: json['resposta'] as String?,
         respondidaEm: _data(json['respondidaEm']),
         respondidaPor: json['respondidaPor'] as String?,
+        implementadaEm: _data(json['implementadaEm']),
       );
 }
 

@@ -177,8 +177,16 @@ class MockSugestaoRepository implements SugestaoRepository {
     return respondida;
   }
 
+  @override
+  Future<void> marcarImplementada(String id) async {
+    final d = await detalhe(id);
+    if (d.implementada) return;
+    _dados[id] = _copiar(d, implementadaEm: _agora());
+  }
+
   SugestaoDetalhe _copiar(SugestaoDetalhe d,
           {SituacaoSugestao? situacao,
+          DateTime? implementadaEm,
           DateTime? emAnaliseDesde,
           String? emAnalisePor,
           String? resposta,
@@ -199,5 +207,6 @@ class MockSugestaoRepository implements SugestaoRepository {
         resposta: resposta ?? d.resposta,
         respondidaEm: respondidaEm ?? d.respondidaEm,
         respondidaPor: respondidaPor ?? d.respondidaPor,
+        implementadaEm: implementadaEm ?? d.implementadaEm,
       );
 }

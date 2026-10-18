@@ -36,6 +36,7 @@ class _SugestaoDetalhePageState extends State<SugestaoDetalhePage> {
   String? _erro;
   bool _marcando = false;
   bool _enviando = false;
+  bool _implementando = false;
 
   @override
   void initState() {
@@ -88,6 +89,26 @@ class _SugestaoDetalhePageState extends State<SugestaoDetalhePage> {
       GigToast.show('$e', type: GigToastType.error);
     } finally {
       if (mounted) setState(() => _marcando = false);
+    }
+  }
+
+  Future<void> _marcarImplementada() async {
+    final confirmou = await showGigConfirmDialog(
+      context,
+      title: 'Marcar como implementada',
+      message: 'A pessoa recebe a notificação "Sua ideia virou GiG!" e ganha a conquista. Marcar?',
+      confirmLabel: 'Marcar',
+    );
+    if (!confirmou || !mounted) return;
+    setState(() => _implementando = true);
+    try {
+      await _repo.marcarImplementada(widget.id);
+      GigToast.show('Sugestão marcada como implementada.', type: GigToastType.success);
+      await _carregar();
+    } catch (e) {
+      GigToast.show('$e', type: GigToastType.error);
+    } finally {
+      if (mounted) setState(() => _implementando = false);
     }
   }
 
@@ -177,6 +198,23 @@ class _SugestaoDetalhePageState extends State<SugestaoDetalhePage> {
         const SizedBox(height: GigSpacing.lg),
       ],
       if (s.respondida) _RespostaEnviada(s: s) else _blocoResposta(),
+      const SizedBox(height: GigSpacing.lg),
+      if (s.implementada)
+        Row(key: const Key('sugestao-implementada'), children: [
+          const Icon(LucideIcons.checkCircle, size: 16, color: GigColors.primary),
+          const SizedBox(width: GigSpacing.sm),
+          Expanded(
+            child: Text('Implementada em ${Formatar.dataHora(s.implementadaEm!)}', style: GigTypography.small),
+          ),
+        ])
+      else
+        GigButton.outline(
+          key: const Key('marcar-implementada'),
+          label: 'MARCAR COMO IMPLEMENTADA',
+          icon: LucideIcons.lightbulb,
+          loading: _implementando,
+          onPressed: _marcarImplementada,
+        ),
     ]);
   }
 

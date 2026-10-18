@@ -16,13 +16,12 @@ import '../usuarios/usuarios_store.dart';
 import '../verificacoes/verificacoes_store.dart';
 
 /// Menu lateral fixo (240 px) a partir de 1024 px de largura; abaixo disso vira gaveta.
-/// Conteúdo com largura máxima de 1200 px.
+/// Conteúdo ocupa toda a largura restante.
 class LayoutBackoffice extends StatefulWidget {
   const LayoutBackoffice({super.key, required this.local, required this.child});
 
   static const larguraMenu = 240.0;
   static const larguraMinimaMenuFixo = 1024.0;
-  static const larguraMaximaConteudo = 1200.0;
 
   final String local;
   final Widget child;
@@ -49,14 +48,9 @@ class _LayoutBackofficeState extends State<LayoutBackoffice> {
     return LayoutBuilder(builder: (context, constraints) {
       final fixo =
           constraints.maxWidth >= LayoutBackoffice.larguraMinimaMenuFixo;
-      final conteudo = Align(
-        alignment: Alignment.topCenter,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-              maxWidth: LayoutBackoffice.larguraMaximaConteudo),
-          child: widget.child,
-        ),
-      );
+      // Sem largura máxima: a página ocupa todo o espaço ao lado do menu, e a barra
+      // de rolagem fica na borda direita da janela.
+      final conteudo = SizedBox.expand(child: widget.child);
       if (fixo) {
         return Scaffold(
           body: Row(children: [

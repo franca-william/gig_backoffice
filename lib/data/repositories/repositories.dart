@@ -69,6 +69,9 @@ abstract interface class SugestaoRepository {
 
   /// Lança [SugestaoJaRespondidaException] (409) se outra pessoa respondeu antes.
   Future<SugestaoDetalhe> responder(String id, String texto);
+
+  /// E39 — a ideia virou realidade: notifica a pessoa e libera as conquistas dela. Idempotente.
+  Future<void> marcarImplementada(String id);
 }
 
 /// E30 — verificação dos estabelecimentos. Toda devolutiva (aprovar, pedir ajuste, recusar) notifica a casa no app.

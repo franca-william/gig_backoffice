@@ -55,6 +55,9 @@ class ApiSugestaoRepository implements SugestaoRepository {
   @override
   Future<SugestaoDetalhe> responder(String id, String texto) async =>
       SugestaoDetalhe.fromJson(await _api.post('$_base/$id/resposta', corpo: {'texto': texto}));
+
+  @override
+  Future<void> marcarImplementada(String id) => _api.post('$_base/$id/implementada');
 }
 
 class ApiDashboardRepository implements DashboardRepository {

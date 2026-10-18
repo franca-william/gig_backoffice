@@ -97,4 +97,36 @@ void main() {
     expect(find.text('Usuário excluído'), findsOneWidget);
     expect(_textoDoCampo(tester), 'Oi! Obrigado pela sugestão. ');
   });
+
+  testWidgets('E39: marcar como implementada pede confirmação e depois mostra a data', (tester) async {
+    final app = await montarApp(tester, logado: true, local: '/sugestoes/s1');
+
+    expect(find.byKey(const Key('marcar-implementada')), findsOneWidget);
+    await tester.ensureVisible(find.byKey(const Key('marcar-implementada')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('marcar-implementada')));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Sua ideia virou GiG!'), findsOneWidget);
+
+    await tester.tap(find.text('Marcar'));
+    await tester.pumpAndSettle();
+
+    expect((await app.sugestoes.detalhe('s1')).implementada, isTrue);
+    expect(find.byKey(const Key('marcar-implementada')), findsNothing);
+    expect(find.byKey(const Key('sugestao-implementada')), findsOneWidget);
+  });
+
+  testWidgets('E39: cancelar a confirmação não marca como implementada', (tester) async {
+    final app = await montarApp(tester, logado: true, local: '/sugestoes/s1');
+
+    await tester.ensureVisible(find.byKey(const Key('marcar-implementada')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('marcar-implementada')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cancelar'));
+    await tester.pumpAndSettle();
+
+    expect((await app.sugestoes.detalhe('s1')).implementada, isFalse);
+    expect(find.byKey(const Key('marcar-implementada')), findsOneWidget);
+  });
 }
